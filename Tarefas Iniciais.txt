@@ -4,7 +4,9 @@ Tarefas Inicias: 1-Configurar o Git para todos
 
 Alexandre - OK
 Igor - OK
+Caio - OK
 
 2-Baixar o arquivo brazil_covid19_cities.csv
 3-Planejar os Algoritmos a serem utilizados
 4-Divisão de tarefas após todos terem noção do que será feito
+5-Plataforma a ser utilizada - vscode?
