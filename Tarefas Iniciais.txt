@@ -3,6 +3,7 @@ Trabalho 1 de ED2 2020 - Alexandre, Caio, Igor, Marcelo
 Tarefas Inicias: 1-Configurar o Git para todos
 
 Alexandre - OK
+Igor - OK
 
 2-Baixar o arquivo brazil_covid19_cities.csv
 3-Planejar os Algoritmos a serem utilizados
