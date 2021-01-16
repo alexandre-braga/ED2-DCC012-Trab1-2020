@@ -76,13 +76,9 @@ int Registro::setDeaths(unsigned int deaths)
 
 std::ostream& Registro::print(std::ostream& os) const
 {
-	os << "Date: " << this->date() << '\n';
-	os << "State: " << this->state() << '\n';
-	os << "City: " << this->city() << '\n';
-	os << "Code: " << this->code() << '\n';
-	os << "Cases: " << this->cases() << '\n';
-	os << "Deaths: " << this->deaths() << '\n';
-	return os;
+	return os << this->date() << "," << this->state() << ","
+		<< this->city() << "," << this->code() << ","
+		<< this->cases() << "," << this->deaths() << "\n";
 }
 
 static std::string string_tok(const std::string *s, char delim)
