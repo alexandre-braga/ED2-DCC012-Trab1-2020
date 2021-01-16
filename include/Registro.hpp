@@ -10,7 +10,7 @@ class Registro
 	private:
 		std::string _date;
 		std::string _state;
-		std::string _name;
+		std::string _city;
 		std::string _code;
 		unsigned int _cases;
 		unsigned int _deaths;
@@ -18,14 +18,14 @@ class Registro
 	public:
 		const std::string& date() const;
 		const std::string& state() const;
-		const std::string& name() const;
+		const std::string& city() const;
 		const std::string& code() const;
 		unsigned int cases() const;
 		unsigned int deaths() const;
 
 		int setDate(const std::string& date);
   	int setState(const std::string& state);
-  	int setName(const std::string& name);
+  	int setCity(const std::string& city);
   	int setCode(const std::string& code);
   	int setCases(unsigned int cases);
   	int setDeaths(unsigned int deaths);

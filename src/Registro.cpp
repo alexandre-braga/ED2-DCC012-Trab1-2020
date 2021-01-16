@@ -1,5 +1,6 @@
 #include "../include/Registro.hpp"
 
+#include <iostream>
 #include <cstring>
 
 const std::string& Registro::date() const
@@ -11,9 +12,9 @@ const std::string& Registro::state() const
 	return this->_state;
 }
 
-const std::string& Registro::name() const
+const std::string& Registro::city() const
 {
-	return this->_name;
+	return this->_city;
 }
 
 const std::string& Registro::code() const
@@ -45,10 +46,10 @@ int Registro::setState(const std::string& state)
 	return 0;
 }
 
-int Registro::setName(const std::string& name)
+int Registro::setCity(const std::string& city)
 {
-	// validate name
-	this->_name = name;
+	// validate city
+	this->_city = city;
 	return 0;
 }
 
@@ -77,7 +78,7 @@ std::ostream& Registro::print(std::ostream& os) const
 {
 	os << "Date: " << this->date() << '\n';
 	os << "State: " << this->state() << '\n';
-	os << "Name: " << this->name() << '\n';
+	os << "City: " << this->city() << '\n';
 	os << "Code: " << this->code() << '\n';
 	os << "Cases: " << this->cases() << '\n';
 	os << "Deaths: " << this->deaths() << '\n';
@@ -130,7 +131,7 @@ std::istream& Registro::read(std::istream& is)
 		// Adicionar alguma forma de tratamento de erros nessa funcao
 		this->setDate(string_tok(&line, ','));
 		this->setState(string_tok(nullptr, ','));
-		this->setName(string_tok(nullptr, ','));
+		this->setCity(string_tok(nullptr, ','));
 		this->setCode(string_tok(nullptr, ','));
 		this->setCases(std::stoi(string_tok(nullptr, ',').c_str()));
 		this->setDeaths(std::stoi(string_tok(nullptr, '\0').c_str()));
