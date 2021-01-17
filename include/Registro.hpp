@@ -12,16 +12,16 @@ class Registro
 		std::string _state;
 		std::string _city;
 		std::string _code;
-		unsigned int _cases;
-		unsigned int _deaths;
+		int _cases;
+		int _deaths;
 		
 	public:
 		const std::string& date() const;
 		const std::string& state() const;
 		const std::string& city() const;
 		const std::string& code() const;
-		unsigned int cases() const;
-		unsigned int deaths() const;
+		int cases() const;
+		int deaths() const;
 
 		int setDate(const std::string& date);
   	int setState(const std::string& state);

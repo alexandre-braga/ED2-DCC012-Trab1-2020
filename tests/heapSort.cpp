@@ -66,48 +66,50 @@ int comp(const Registro& r1, const Registro& r2)
 	return 1;
 }
 
+void calculaTotalDiarios(vector<Registro>& lista)
+{
+	vector<Registro>::reverse_iterator it = lista.rbegin();
+	vector<Registro>::reverse_iterator next;
+
+	while ((next = it + 1) != lista.rend()) {
+		if (it->code() == next->code()) {
+			it->setCases(it->cases() - next->cases());
+		}
+		it = next;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 	std::vector<Registro> vet;
-	size_t count = 0;
 	Registro r;
 	ifstream f;
+	ofstream arquivoSaida;
 
 	if (argc < 2) {
 		std::cerr << "Nenhum arquivo fornecido\n";
 		exit(1);
 	}
 
+	arquivoSaida.open("brazil_covid19_cities_processos.csv");
+	if (!arquivoSaida.is_open()) {
+		std::cerr << "Falha ao abrir o arquivo de saída\n";
+		exit(2);
+	}
 	f.open(*++argv);
 
 	if (f.is_open()) {
 		f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-		for (count = 0; f >> r && count < 1000; count++) {
+		while (f >> r) {
 			vet.push_back(r);
 		}
 
-		for (count = 0; count < vet.size(); ++count) {
-			int randomPos = random() % vet.size();
-			std::swap(vet[count], vet[randomPos]);
-		}
-
-		f.close();
-
-		std::cout << "Antes de ordenar:\n";
-		for (count = 0; count < vet.size(); count++) {
-			std::cout << "----------------------------\n";
-			std::cout << vet[count];
-			std::cout << "----------------------------\n";
-		}
-
 		heapSort(vet, comp);
+		calculaTotalDiarios(vet);
 
-		std::cout << "Depois de ordenar:\n";
-		for (count = 0; count < vet.size(); count++) {
-			std::cout << "----------------------------\n";
-			std::cout << vet[count];
-			std::cout << "----------------------------\n";
+		for (const Registro& r : vet) {
+			arquivoSaida << r << '\n';
 		}
 		
 	} else {

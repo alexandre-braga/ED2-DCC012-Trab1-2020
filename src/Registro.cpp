@@ -22,12 +22,12 @@ const std::string& Registro::code() const
 	return this->_code;
 }
 
-unsigned int Registro::cases() const
+int Registro::cases() const
 {
 	return this->_cases;
 }
 
-unsigned int Registro::deaths() const
+int Registro::deaths() const
 {
 	return this->_deaths;
 }
@@ -78,7 +78,7 @@ std::ostream& Registro::print(std::ostream& os) const
 {
 	return os << this->date() << "," << this->state() << ","
 		<< this->city() << "," << this->code() << ","
-		<< this->cases() << "," << this->deaths() << "\n";
+		<< this->cases() << "," << this->deaths();
 }
 
 static std::string string_tok(const std::string *s, char delim)
