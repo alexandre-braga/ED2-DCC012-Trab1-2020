@@ -7,15 +7,24 @@
  
 const int MIN_RUN = 64;
 
+/*Compara Cases*/
+int comp(const Registro& r1, const Registro& r2)
+{
+    if(r1.cases() < r2.cases()) 
+        return -1;
+    else if(r2.cases() < r1.cases())
+        return 1;
+    return 0;
+}
 
 /*Insertion Sort: */
-void insertionSort(int vet[], int inicio, int fim) 
+void insertionSort(vector<Registro>& vet, int inicio, int fim) 
 { 
     for (int i = inicio + 1; i <= fim; i++) 
     { 
         int pivo = vet[i]; 
         int j = i - 1; 
-        while (j >= inicio && vet[j] > pivo) 
+        while (j >= inicio && comp(vet[j],pivo) 
         { 
             vet[j+1] = vet[j]; 
             j--; 
@@ -28,7 +37,7 @@ void insertionSort(int vet[], int inicio, int fim)
 -wikipedia
 */
 
-void verificaFimRun(int vet[], int i){
+void verificaFimRun(vector<Registro>& vet, int i){
     int fimrum = 0;
     if(vet[i+1]>=vet[i])
         while(vet[i]<=vet[i+1]){
@@ -58,8 +67,45 @@ void verificaFimRun(int vet[], int i){
 
 /*Merge Sort:*/
 
+/*Algumas otimizações são feitas no MergeSort utilizado no TimSort visando diminuir o custo do algoritmo, mais precisamente o espaço de memória adicional e o número de comparações. Em algumas implementações, geralmente cria-se um vetor temporário cujo tamanho é dado pela soma dos dois sub-vetores de entrada. Porém isso não é necessário quando deseja-se fazer o merge de dois sub-vetores cujos elementos são consecutivos, pois criar um vetor temporário com o tamanho do menor sub-vetor é suficiente. O processo de merge pode ser feito da seguinte forma:
+
+Um vetor temporário é criado com o tamanho do menor dos dois Runs que são combinados.
+Copia-se o Run mais curto para o vetor temporário.
+Marca-se a posição corrente com os primeiros elementos do maior Run e do "Run" temporário.
+Em cada passo seguinte compare os primeiros elementos do maior Run e do Run temporário e mova o menor para o vetor ordenado. Move-se (incrementa) o endereço base do Run que teve o elemento movido.
+Repete o passo 4 até um dos Runs esvaziar.
+Adiciona todos os elementos do Run remanescente para o final do Run ordenado.
+-wikipedia*/
 
 
+/*Merge do Caio*/
+vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp)(const Registro&, const Registro&)) {
+    vector<Registro> merged;
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    while (i < vet1.size() && j < vet2.size()) {
+        if (comp(vet1[i], vet2[j]) <= 0) {
+            merged[k] = vet1[i];
+            i++;
+        }
+        else {
+            merged[k] = vet2[j];
+            j++;
+        }
+        k++;
+    }
+    while (i < vet1.size()) {
+        merged[k] = vet1[i];
+        i++;
+        k++;
+    }
+    while (j < vet2.size()) {
+        merged[k] = vet2[j];
+        j++;
+        k++;
+    }
+}
 
 /*Isto é feito da seguinte maneira:
 Cria-se uma pair stack <Posição do primeiro elemento do Run>-<Tamanho do Run>.
@@ -93,7 +139,7 @@ void ajustaPilhaDeRuns (vector<vector<int>> pilhaDeRuns){
         int z = c.size;
         if(z > x + y){
             if(x > y)
-                merge(pilhaDeRuns[i-1], pilhaDeRuns[i]);
+                merge(pilhaDeRuns[i-1], pilhaDeRuns[i],);
             else
                 break;
         }
@@ -125,5 +171,9 @@ void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)
         }
         RUNAux = 2*RUNAux
     }*/
+}
+
+int main(int argc, char *argv[]){
+
 }
   
