@@ -1,3 +1,4 @@
+Criado por Tim Peters
 Pegando dados grandes e dividindo em menores e usando insert em menores
 Pois um insertion sort para poucos dados a serem ordenados é bem mais rápido q um algoritmo de n log n
 Empiricamente pedaços entre 32 e 64
@@ -23,6 +24,21 @@ enquanto (o tamanho das runs >=2){
         merge( run (n-1), menor entre(run(n-2), run(n)) )
     }
 }
+
+Organiza as RUNS:
+um for (com i no inicio do vetor; i menor que o tamanho do vetor; e tendo como passo uma RUN) 
+        insertionSort(array, começando em i, e indo até o menor entre min((i+31),(n-1))); 
+        OU
+        array[i até i+RUN] = insertionSort(array[i até i+RUN])
+
+Pro MERGE:
+
+RUNAux = RUN
+while RUNAux < tamArray
+    um for (com i no inicio do vetor; i menor que o tamanho do vetor; e tendo como passo duas RUN) 
+        array[i até i+RUNAux] = Merge(array[i até i+RUNAux], array[i+RUN até i+2*RUNAux] )
+    RUNAux = 2*RUNAux
+
 
 fonte:
 Explicação Part 1: https://www.youtube.com/watch?v=emeME__917E
