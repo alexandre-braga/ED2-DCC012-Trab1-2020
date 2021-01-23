@@ -2,9 +2,11 @@
 #include <fstream>
 #include <vector>
 #include <stack>
+#include <limits>
 
 #include "../include/Registro.hpp"
- 
+using namespace std;
+
 const int MIN_RUN = 64;
 
 /*Compara Cases*/
@@ -120,7 +122,7 @@ Para qualquer Run que não tenha sido considerado, basta tomá-lo e ir para o pa
 */
 
 
-/*Mantém a runs em tamanho crescente enquanto desce a pilha:*/
+/*Faz o merge das Runs em ordem crescente, e mantém a estabilidade */
 
 /*
 z > x + y 
@@ -131,52 +133,75 @@ yy
 zzzz
 */
 
-void ajustaPilhaDeRuns (vector<vector<int>> pilhaDeRuns){
+void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns){
     while (pilhaDeRuns.size >= 2){
-    for(i=1; i+1<=n; i++){
-        std::vector<int> a = pilhaDeRuns[i-1];
-        std::vector<int> b = pilhaDeRuns[i];
-        std::vector<int> c = pilhaDeRuns[i+1];
-        int x = a.size;
-        int y = b.size;
-        int z = c.size;
-        if(z > x + y){
-            if(x > y)
-                pilhaDeRuns[i] = merge(pilhaDeRuns[i-1], pilhaDeRuns[i],);
+        for(i=1; i+1 <= pilhaDeRuns.size; i++){
+            std::vector<Registro> a = pilhaDeRuns[i-1];
+            std::vector<Registro> b = pilhaDeRuns[i];
+            std::vector<Registro> c = pilhaDeRuns[i+1];
+            int x = a.size;
+            int y = b.size;
+            int z = c.size;
+            if(z > x + y){
+                if(x > y)
+                    pilhaDeRuns[i] = merge(pilhaDeRuns[i-1], pilhaDeRuns[i],);
+                else
+                    break;
+            }
             else
-                break;
-        }
-        else{
-            pilhaDeRuns[i] = merge(pilhaDeRuns[i],min(pilhaDeRuns[i-1], pilhaDeRuns[i+1]);
+                pilhaDeRuns[i] = merge(pilhaDeRuns[i],min(pilhaDeRuns[i-1], pilhaDeRuns[i+1]);
         }
     }
 }
-
-
 
 
 
 void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
-    /*Organiza as RUNS e faz o InsertionSort nelas:*/
     for (int i = 0, int j = verificaFimRun(vet,i); i < n; i+=j){
         vector<vector<int>> pilhaDeRuns;
         pilhaDeRuns.push_back(insertionSort(vet, i, j);); 
     }
-    /*Faz o Merge para as RUNS enquanto deixa elas em ordem crescente de tamanho*/
     ajustaPilhaDeRuns(pilhaDeRuns);
-
-    /*Faz o Merge para as RUNS já em ordem crescente de tamanho - elas não estão:
-    n = vet.size;
-    int RUNAux = MIN_RUN;
-    while RUNAux < n{
-        for(i = 0; i < n; i+=2*RUNAux){
-            vet[i até i+RUNAux] = Merge(vet[i até i+RUNAux], vet[i+RUNAux até i+2*RUNAux] )
-        }
-        RUNAux = 2*RUNAux
-    }*/
 }
 
 int main(int argc, char *argv[]){
 
+    std::vector<Registro> vet;
+	Registro r;
+	ifstream f;
+	ofstream arquivoSaida;
+
+	if (argc < 2) {
+		std::cerr << "Nenhum arquivo fornecido\n";
+		exit(1);
+	}
+
+	arquivoSaida.open("brazil_covid19_cities_timSorted.csv");
+	if (!arquivoSaida.is_open()) {
+		std::cerr << "Falha ao abrir o arquivo de saída\n";
+		exit(2);
+	}
+	f.open(*++argv);
+
+
+	if (f.is_open()) {
+		f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+		while (f >> r) {
+			vet.push_back(r);
+		}
+
+		timSort(vet, comp);
+
+		for (const Registro& r : vet) {
+			arquivoSaida << r << '\n';
+		}
+		
+	} else {
+		std::cerr << "Erro ao abrir o arquivo `" << *argv << "\n";
+		return 2;
+	}
+
+	return 0;
+
 }
-  
