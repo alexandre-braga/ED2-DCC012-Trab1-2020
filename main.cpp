@@ -3,8 +3,8 @@
 #include <limits>
 #include <vector>
 
-#include "../include/Registro.hpp"
-#include "../include/HeapSort.hpp"
+#include "./include/Registro.hpp"
+#include "./include/HeapSort.hpp"
 
 #define ERR_NENHUM_ARG 1
 #define ERR_FALHA_ARQ  2
