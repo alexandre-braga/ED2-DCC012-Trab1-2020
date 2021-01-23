@@ -3,6 +3,7 @@
 #include <vector>
 #include <stack>
 #include <limits>
+#include <algorithm>
 
 #include "../include/Registro.hpp"
 using namespace std;
@@ -24,7 +25,7 @@ void insertionSort(vector<Registro>& vet, int inicio, int fim)
 { 
     for (int i = inicio + 1; i <= fim; i++) 
     { 
-        std::vector<Registro> pivo = vet[i]; 
+        Registro pivo = vet[i]; 
         int j = i - 1; 
         while (j >= inicio && comp(vet[j],pivo)){ 
             vet[j+1] = vet[j]; 
@@ -38,30 +39,31 @@ void insertionSort(vector<Registro>& vet, int inicio, int fim)
 -wikipedia
 */
 
-int verificaFimRun(vector<Registro>& vet, int i){
-    int fimrum = 0;
-    if(vet[i+1]>=vet[i]){
-        while(vet[i]<=vet[i+1]){
-            i++
-            if(vet[i] == NULL)
-                return fimrum;
+int verificaFimRun(vector<Registro>& vet, int a){
+    int fimrun = 0;
+    int i = a;
+    if(vet[i+1].cases()>=vet[i].cases()){
+        while(vet[i].cases()<=vet[i+1].cases()){
+            i++;
+            //if(vet[i] == NULL)
+                //return fimrun;
             fimrun++;
         }
-        if(fimrum < MIN_RUN)
-            fimrun+=MIN_RUN-fimrum;
-        return fimrum;
+        if(fimrun < MIN_RUN)
+            fimrun+=MIN_RUN-fimrun;
+        return fimrun;
     }
     else{
-        while(vet[i]>=vet[i+1]){
-           i++
-           if(vet[i] == NULL)
-                return fimrum;
+        while(vet[i].cases()>=vet[i+1].cases()){
+           i++;;
+           //if(vet[i].cases() == NULL)
+                //return fimrun;
            fimrun++;
         }
-        std::reverse(vet.a, vet.fimrun);
-        if(fimrum < MIN_RUN)
-           fimrum+=MIN_RUN-fimrum;
-        return fimrum;
+        reverse(vet.begin() + a, vet.begin() + fimrun);
+        if(fimrun < MIN_RUN)
+           fimrun+=MIN_RUN-fimrun;
+        return fimrun;
     }
 }
 
@@ -80,10 +82,10 @@ Adiciona todos os elementos do Run remanescente para o final do Run ordenado.
 /*Merge do Caio*/
 vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp)(const Registro&, const Registro&)) {
     vector<Registro> merged;
-    if(vet1 == NULL)
-        return vet2;
-    if(vet2 == NULL)
-        return vet1;
+    //if(vet1 == NULL)
+        //return vet2;
+    //if(vet2 == NULL)
+        //return vet1;
     int i = 0;
     int j = 0;
     int k = 0;
@@ -143,22 +145,27 @@ void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns){
             int z = c.size();
             if(z > x + y){
                 if(x > y)
-                    pilhaDeRuns[i] = merge(pilhaDeRuns[i-1], pilhaDeRuns[i],);
+                    pilhaDeRuns[i] = merge(pilhaDeRuns[i-1], pilhaDeRuns[i], comp);
                 else
                     break;
             }
             else
-                pilhaDeRuns[i] = merge(pilhaDeRuns[i],min(pilhaDeRuns[i-1], pilhaDeRuns[i+1]);
+                pilhaDeRuns[i] = merge(pilhaDeRuns[i],min(pilhaDeRuns[i-1], pilhaDeRuns[i+1]), comp);
         }
     }
 }
 
+void adicionaNaPilha (int a, int b){
 
+}
 
 void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
     vector<vector<Registro>> pilhaDeRuns;
-    for (int i = 0, j = verificaFimRun(vet,i); i < vet.size(); i+=j){    
-        pilhaDeRuns.push_back(insertionSort(vet, i, j)); 
+    for (int i = 0, j = verificaFimRun(vet,i); i < vet.size(); i+=j){   
+        insertionSort(vet, i, j); 
+        std::vector<Registro> coord;
+        copy(vet[i], vet[j], coord); 
+        pilhaDeRuns.push_back(coord);
     }
     ajustaPilhaDeRuns(pilhaDeRuns);
 }
