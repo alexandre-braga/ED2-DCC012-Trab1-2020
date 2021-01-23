@@ -158,16 +158,11 @@ void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns){
     }
 }
 
-void adicionaNaPilha (int a, int b){
-
-}
-
 void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
     vector<vector<Registro>> pilhaDeRuns;
     for (int i = 0, j = verificaFimRun(vet,i); i < vet.size(); i+=j){   
         insertionSort(vet, i, j); 
-        std::vector<Registro> coord;
-        copy(vet[i], vet[j], coord); 
+        std::vector<Registro> coord(vet.begin() + 1, vet.begin() + j + 1);
         pilhaDeRuns.push_back(coord);
     }
     ajustaPilhaDeRuns(pilhaDeRuns);
