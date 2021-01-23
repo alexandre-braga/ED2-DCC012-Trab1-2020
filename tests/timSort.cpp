@@ -24,10 +24,9 @@ void insertionSort(vector<Registro>& vet, int inicio, int fim)
 { 
     for (int i = inicio + 1; i <= fim; i++) 
     { 
-        int pivo = vet[i]; 
+        std::vector<Registro> pivo = vet[i]; 
         int j = i - 1; 
-        while (j >= inicio && comp(vet[j],pivo) 
-        { 
+        while (j >= inicio && comp(vet[j],pivo)){ 
             vet[j+1] = vet[j]; 
             j--; 
         } 
@@ -39,31 +38,31 @@ void insertionSort(vector<Registro>& vet, int inicio, int fim)
 -wikipedia
 */
 
-void verificaFimRun(vector<Registro>& vet, int i){
+int verificaFimRun(vector<Registro>& vet, int i){
     int fimrum = 0;
-    if(vet[i+1]>=vet[i])
+    if(vet[i+1]>=vet[i]){
         while(vet[i]<=vet[i+1]){
             i++
-            if(vet[i] == NULL){
+            if(vet[i] == NULL)
                 return fimrum;
-            }
             fimrun++;
         }
         if(fimrum < MIN_RUN)
             fimrun+=MIN_RUN-fimrum;
         return fimrum;
-    else
+    }
+    else{
         while(vet[i]>=vet[i+1]){
            i++
-           if(vet[i] == NULL){
+           if(vet[i] == NULL)
                 return fimrum;
-            }
            fimrun++;
         }
         std::reverse(vet.a, vet.fimrun);
         if(fimrum < MIN_RUN)
            fimrum+=MIN_RUN-fimrum;
         return fimrum;
+    }
 }
 
 
@@ -81,9 +80,9 @@ Adiciona todos os elementos do Run remanescente para o final do Run ordenado.
 /*Merge do Caio*/
 vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp)(const Registro&, const Registro&)) {
     vector<Registro> merged;
-    if(!vet1)
+    if(vet1 == NULL)
         return vet2;
-    if(!vet2)
+    if(vet2 == NULL)
         return vet1;
     int i = 0;
     int j = 0;
@@ -134,14 +133,14 @@ zzzz
 */
 
 void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns){
-    while (pilhaDeRuns.size >= 2){
-        for(i=1; i+1 <= pilhaDeRuns.size; i++){
+    while (pilhaDeRuns.size() >= 2){
+        for(int i=1; i+1 <= pilhaDeRuns.size(); i++){
             std::vector<Registro> a = pilhaDeRuns[i-1];
             std::vector<Registro> b = pilhaDeRuns[i];
             std::vector<Registro> c = pilhaDeRuns[i+1];
-            int x = a.size;
-            int y = b.size;
-            int z = c.size;
+            int x = a.size();
+            int y = b.size();
+            int z = c.size();
             if(z > x + y){
                 if(x > y)
                     pilhaDeRuns[i] = merge(pilhaDeRuns[i-1], pilhaDeRuns[i],);
@@ -157,9 +156,9 @@ void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns){
 
 
 void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
-    for (int i = 0, int j = verificaFimRun(vet,i); i < n; i+=j){
-        vector<vector<int>> pilhaDeRuns;
-        pilhaDeRuns.push_back(insertionSort(vet, i, j);); 
+    vector<vector<Registro>> pilhaDeRuns;
+    for (int i = 0, j = verificaFimRun(vet,i); i < vet.size(); i+=j){    
+        pilhaDeRuns.push_back(insertionSort(vet, i, j)); 
     }
     ajustaPilhaDeRuns(pilhaDeRuns);
 }
