@@ -150,7 +150,10 @@ void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns){
                     break;
             }
             else
-                pilhaDeRuns[i] = merge(pilhaDeRuns[i],min(pilhaDeRuns[i-1], pilhaDeRuns[i+1]), comp);
+                if(x > z)
+                    pilhaDeRuns[i] = merge(pilhaDeRuns[i], pilhaDeRuns[i+1], comp);
+                else
+                    pilhaDeRuns[i] = merge(pilhaDeRuns[i], pilhaDeRuns[i-1], comp);
         }
     }
 }
