@@ -1,0 +1,12 @@
+Pegando dados grandes e dividindo em menores e usando insert em menores
+Pois um insertion sort para poucos dados a serem ordenados é bem mais rápido q um algoritmo de n log n
+Empiricamente pedaços de 32 e 64
+A COMBINAÇÃO DE UM N LOG N COM ISERTION
+com "chunks" de 64 da pra evitar uns 5 niveis no merge
+quebrar em sequencias de crescente e descrescente limitando com o 64
+
+fonte:
+Explicação Part 1: https://www.youtube.com/watch?v=emeME__917E
+Explicação Part 2: https://www.youtube.com/watch?v=6DOhQyqAAvU
+Explicação Part 3: https://www.youtube.com/watch?v=Yk4CBisILaw
+Ex de Implementação do Código: https://www.geeksforgeeks.org/timsort/
