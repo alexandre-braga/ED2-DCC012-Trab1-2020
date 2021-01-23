@@ -1,9 +1,26 @@
 Pegando dados grandes e dividindo em menores e usando insert em menores
 Pois um insertion sort para poucos dados a serem ordenados é bem mais rápido q um algoritmo de n log n
-Empiricamente pedaços de 32 e 64
+Empiricamente pedaços entre 32 e 64
 A COMBINAÇÃO DE UM N LOG N COM ISERTION
 com "chunks" de 64 da pra evitar uns 5 niveis no merge
 quebrar em sequencias de crescente e descrescente limitando com o 64
+run = chunks de elementos crescentes e ordenados
+pilha de runs
+merge de runs adjacentes pra manter a estabilidade
+run (n) > run(n-1)+run(n-2)
+
+
+Mantém a runs em tamanho crescente enquanto desce a pilha:
+
+enquanto (o tamanho das runs >=2){
+    se(run(n) > run(n-1)+run(n-2){
+        se(run (n-2) > run (n-1))
+           merge( run (n-2), run (n-1) )
+    })
+    se nao{
+        merge( run (n-1), menor entre(run(n-2), run(n)) )
+    }
+}
 
 fonte:
 Explicação Part 1: https://www.youtube.com/watch?v=emeME__917E
