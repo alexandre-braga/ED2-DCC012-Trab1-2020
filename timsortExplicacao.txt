@@ -44,4 +44,6 @@ fonte:
 Explicação Part 1: https://www.youtube.com/watch?v=emeME__917E
 Explicação Part 2: https://www.youtube.com/watch?v=6DOhQyqAAvU
 Explicação Part 3: https://www.youtube.com/watch?v=Yk4CBisILaw
+Explicação Part 4: https://www.youtube.com/watch?v=o8y9uYygLcw
+Explicação do gallop: https://www.wikiwand.com/en/Timsort
 Ex de Implementação do Código: https://www.geeksforgeeks.org/timsort/
