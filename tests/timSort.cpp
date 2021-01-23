@@ -134,7 +134,8 @@ yy
 zzzz
 */
 
-void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns){
+void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns, vector<Registro>& vet){
+    int fim = 0;
     while (pilhaDeRuns.size() >= 2){
         for(int i=1; i+1 <= pilhaDeRuns.size(); i++){
             std::vector<Registro> a = pilhaDeRuns[i-1];
@@ -154,19 +155,20 @@ void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns){
                     pilhaDeRuns[i] = merge(pilhaDeRuns[i], pilhaDeRuns[i+1], comp);
                 else
                     pilhaDeRuns[i] = merge(pilhaDeRuns[i], pilhaDeRuns[i-1], comp);
+        fim = i;
         }
     }
+    vet = pilhaDeRuns[fim];
 }
 
-vector<Registro> timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
+void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
     vector<vector<Registro>> pilhaDeRuns;
     for (int i = 0, j = verificaFimRun(vet,i); i < vet.size(); i+=j){   
         insertionSort(vet, i, j); 
         std::vector<Registro> coord(vet.begin() + 1, vet.begin() + j + 1);
         pilhaDeRuns.push_back(coord);
     }
-    ajustaPilhaDeRuns(pilhaDeRuns);
-    return pilhaDeRuns[0];
+    ajustaPilhaDeRuns(pilhaDeRuns,vet);
 }
 
 int main(int argc, char *argv[]){
@@ -196,9 +198,9 @@ int main(int argc, char *argv[]){
 			vet.push_back(r);
 		}
 
-		std::vector<Registro> ordenado = timSort(vet, comp);
+		timSort(vet, comp);
 
-		for (const Registro& r : ordenado) {
+		for (const Registro& r : vet) {
 			arquivoSaida << r << '\n';
 		}
 		
