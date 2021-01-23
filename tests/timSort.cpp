@@ -67,9 +67,7 @@ void verificaFimRun(vector<Registro>& vet, int i){
 
 /*Merge Sort:*/
 
-/*Algumas otimizações são feitas no MergeSort utilizado no TimSort visando diminuir o custo do algoritmo, mais precisamente o espaço de memória adicional e o número de comparações. Em algumas implementações, geralmente cria-se um vetor temporário cujo tamanho é dado pela soma dos dois sub-vetores de entrada. Porém isso não é necessário quando deseja-se fazer o merge de dois sub-vetores cujos elementos são consecutivos, pois criar um vetor temporário com o tamanho do menor sub-vetor é suficiente. O processo de merge pode ser feito da seguinte forma:
-
-Um vetor temporário é criado com o tamanho do menor dos dois Runs que são combinados.
+/*Algumas otimizações são feitas no MergeSort utilizado no TimSort visando diminuir o custo do algoritmo, mais precisamente o espaço de memória adicional e o número de comparações. Em algumas implementações, geralmente cria-se um vetor temporário cujo tamanho é dado pela soma dos dois sub-vetores de entrada. Porém isso não é necessário quando deseja-se fazer o merge de dois sub-vetores cujos elementos são consecutivos, pois criar um vetor temporário com o tamanho do menor sub-vetor é suficiente. O processo de merge pode ser feito da seguinte forma: Um vetor temporário é criado com o tamanho do menor dos dois Runs que são combinados.
 Copia-se o Run mais curto para o vetor temporário.
 Marca-se a posição corrente com os primeiros elementos do maior Run e do "Run" temporário.
 Em cada passo seguinte compare os primeiros elementos do maior Run e do Run temporário e mova o menor para o vetor ordenado. Move-se (incrementa) o endereço base do Run que teve o elemento movido.
@@ -81,6 +79,10 @@ Adiciona todos os elementos do Run remanescente para o final do Run ordenado.
 /*Merge do Caio*/
 vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp)(const Registro&, const Registro&)) {
     vector<Registro> merged;
+    if(!vet1)
+        return vet2;
+    if(!vet2)
+        return vet1;
     int i = 0;
     int j = 0;
     int k = 0;
@@ -105,6 +107,7 @@ vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp
         j++;
         k++;
     }
+    return merged;
 }
 
 /*Isto é feito da seguinte maneira:
@@ -139,12 +142,12 @@ void ajustaPilhaDeRuns (vector<vector<int>> pilhaDeRuns){
         int z = c.size;
         if(z > x + y){
             if(x > y)
-                merge(pilhaDeRuns[i-1], pilhaDeRuns[i],);
+                pilhaDeRuns[i] = merge(pilhaDeRuns[i-1], pilhaDeRuns[i],);
             else
                 break;
         }
         else{
-            merge(pilhaDeRuns[i],min(pilhaDeRuns[i-1], pilhaDeRuns[i+1]);
+            pilhaDeRuns[i] = merge(pilhaDeRuns[i],min(pilhaDeRuns[i-1], pilhaDeRuns[i+1]);
         }
     }
 }
