@@ -7,15 +7,17 @@ quebrar em sequencias de crescente e descrescente limitando com o 64
 run = chunks de elementos crescentes e ordenados
 pilha de runs
 merge de runs adjacentes pra manter a estabilidade
+Sempre devem ser mantidas:
 run (n) > run(n-1)+run(n-2)
-
+run (n-1) > run (n-2)
 
 Mantém a runs em tamanho crescente enquanto desce a pilha:
-
 enquanto (o tamanho das runs >=2){
     se(run(n) > run(n-1)+run(n-2){
         se(run (n-2) > run (n-1))
            merge( run (n-2), run (n-1) )
+        se nao
+           break
     })
     se nao{
         merge( run (n-1), menor entre(run(n-2), run(n)) )
