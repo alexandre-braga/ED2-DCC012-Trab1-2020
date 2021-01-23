@@ -7,8 +7,6 @@
  
 const int MIN_RUN = 64;
 
-/*Merge Sort:*/
-
 
 /*Insertion Sort: */
 void insertionSort(int vet[], int inicio, int fim) 
@@ -25,43 +23,6 @@ void insertionSort(int vet[], int inicio, int fim)
         vet[j+1] = pivo; 
     } 
 } 
-
-
-
-/*Isto é feito da seguinte maneira:
-Cria-se uma pair stack <Posição do primeiro elemento do Run>-<Tamanho do Run>.
-Insere-se o Run atual à pair stack.
-Avalia se deve ser feito o merge.
-Avaliação: Sejam X, Y e Z os 3 primeiros Runs da pair stack; X > Y + Z e Y > Z. Se uma das duas condições não é satisfeita, então é feito o merge do Run Y com o Run de menor tamanho entre X e Z.
-Para qualquer Run que não tenha sido considerado, basta tomá-lo e ir para o passo 2 até que reste apenas um Run na pilha (que é o vetor final já ordenado).*/
-
-
-/*Mantém a runs em tamanho crescente enquanto desce a pilha:*/
-
-
-void ajustaPilhaDeRuns (stack<pair<int,int>> pilhaDeRuns){
-    while (pilhaDeRuns.size >= ){
-        stack<pair<int,int>> a = pilhaDeRuns.top;
-        pilhaDeRuns.pop;
-        stack<pair<int,int>> b = pilhaDeRuns.top;
-        pilhaDeRuns.pop;
-        stack<pair<int,int>> c = pilhaDeRuns.top;
-        int x = a.second-a.first;
-        int y = b.second-b.first;
-        int z = c.second-c.first;
-        if(x > y + z){
-            if(y > z)
-                merge(vet[a.first até a.second], vet[b.first até b.second]);
-            else
-            break;
-        })
-        else{
-            merge(vet[b.first até b.second],min(vet[a.first até a.second], vet[c.first até c.second]);
-        }
-    }
-}
-
-
 
 /*Começando a partir da posição do elemento atual, procure o Run (um sub-vetor ordenado) no vetor de entrada. Por definição o Run será pelo menos o elemento atual e o próximo (pois formará um vetor ordenado, seja crescente ou decrescente), sendo que a composição de mais elementos no Run dependerá da forma como os elementos estão organizados. O próximo elemento é considerado se ao considerá-lo no Run atual, o Run continue ordenado. Se o Run final está ordenado de forma decrescente, os elementos são "reordenados" em uma ordem crescente (por meio de um algoritmo  simples de inversão de vetor).
 -wikipedia
@@ -95,19 +56,67 @@ void verificaFimRun(int vet[], int i){
 }
 
 
+/*Merge Sort:*/
+
+
+
+
+/*Isto é feito da seguinte maneira:
+Cria-se uma pair stack <Posição do primeiro elemento do Run>-<Tamanho do Run>.
+Insere-se o Run atual à pair stack.
+Avalia se deve ser feito o merge.
+Avaliação: Sejam X, Y e Z os 3 primeiros Runs da pair stack; X > Y + Z e Y > Z. Se uma das duas condições não é satisfeita, então é feito o merge do Run Y com o Run de menor tamanho entre X e Z.
+Para qualquer Run que não tenha sido considerado, basta tomá-lo e ir para o passo 2 até que reste apenas um Run na pilha (que é o vetor final já ordenado).
+-wikipedia
+*/
+
+
+/*Mantém a runs em tamanho crescente enquanto desce a pilha:*/
+
+/*
+z > x + y 
+y > x
+
+x
+yy
+zzzz
+*/
+
+void ajustaPilhaDeRuns (vector<vector<int>> pilhaDeRuns){
+    while (pilhaDeRuns.size >= 2){
+    for(i=1; i+1<=n; i++){
+        std::vector<int> a = pilhaDeRuns[i-1];
+        std::vector<int> b = pilhaDeRuns[i];
+        std::vector<int> c = pilhaDeRuns[i+1];
+        int x = a.size;
+        int y = b.size;
+        int z = c.size;
+        if(z > x + y){
+            if(x > y)
+                merge(pilhaDeRuns[i-1], pilhaDeRuns[i]);
+            else
+                break;
+        }
+        else{
+            merge(pilhaDeRuns[i],min(pilhaDeRuns[i-1], pilhaDeRuns[i+1]);
+        }
+    }
+}
+
+
+
+
 
 void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
     /*Organiza as RUNS e faz o InsertionSort nelas:*/
     for (int i = 0, int j = verificaFimRun(vet,i); i < n; i+=j){
-        stack<pair<int,int>> pilhaDeRuns;
-        pilhaDeRuns.push({i, j}); 
-        insertionSort(vet, i, j);
-        ajustaPilhaDeRuns(pilhaDeRuns);
+        vector<vector<int>> pilhaDeRuns;
+        pilhaDeRuns.push_back(insertionSort(vet, i, j);); 
     }
     /*Faz o Merge para as RUNS enquanto deixa elas em ordem crescente de tamanho*/
     ajustaPilhaDeRuns(pilhaDeRuns);
 
-    /*Faz o Merge para as RUNS já em ordem crescente de tamanho - elas não estão*/
+    /*Faz o Merge para as RUNS já em ordem crescente de tamanho - elas não estão:
     n = vet.size;
     int RUNAux = MIN_RUN;
     while RUNAux < n{
@@ -115,6 +124,6 @@ void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)
             vet[i até i+RUNAux] = Merge(vet[i até i+RUNAux], vet[i+RUNAux até i+2*RUNAux] )
         }
         RUNAux = 2*RUNAux
-    }
+    }*/
 }
   
