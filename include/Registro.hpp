@@ -47,6 +47,15 @@ class Registro
 			return -1;
 		return 1;
 	};
+
+	static int comparaCasos(const Registro& r1, const Registro& r2) 
+	{
+		if (r1.cases() < r2.cases())
+			return -1;
+		if (r2.cases() < r1.cases())
+			return 1;
+		return 0;
+	};
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Registro& r)
