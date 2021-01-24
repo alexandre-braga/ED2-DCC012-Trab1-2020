@@ -160,6 +160,10 @@ int main(int argc, char *argv[])
 				*/
 			}
 
+			// Precisa passar os ponteiros pro primeiro e ultimo elementos do vetor nessa
+			// Mas nao to fazendo certo pq tá retornando uns numeros absurdos
+			// Vai pegar arr[i * N] ate arr[i * N + N - 1] pq precisa da media de M
+			// Exemplo: M = 0 vai pegar de 0 ate N - 1; M = 1 vai pegar de N ate 2N + 1
 			// Media de comparacoes
 			mediasComp[i] = std::accumulate(&arrComp[i * N], &arrComp[i * N + N - 1], 0) / N;
 			// Media de trocas
