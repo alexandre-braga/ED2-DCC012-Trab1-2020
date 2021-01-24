@@ -60,7 +60,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
                 return fimrun;
            fimrun++;
         }
-        reverse(vet.begin() + i, vet.begin() + fimrun);
+        reverse(vet.begin() + i, vet.begin() + fimrun + 1);
         if(fimrun < MIN_RUN)
            fimrun+=MIN_RUN-fimrun;
         return fimrun;
