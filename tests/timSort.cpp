@@ -22,13 +22,14 @@ int comp(const Registro& r1, const Registro& r2)
 }
 
 /*Insertion Sort: */
+/*j-- pra um j = 0*/
 void insertionSort(vector<Registro>& vet, size_t inicio, size_t fim, int(*comp)(const Registro&, const Registro&))    
 { 
     for (size_t i = inicio + 1; i <= fim; i++) 
     { 
         Registro pivo = vet[i]; 
         size_t j = i - 1; 
-        while (j >= inicio && comp(vet[j],pivo)){ 
+        while (j > inicio && comp(vet[j],pivo)){ 
             vet[j+1] = vet[j]; 
             j--; 
         } 
@@ -42,10 +43,11 @@ void insertionSort(vector<Registro>& vet, size_t inicio, size_t fim, int(*comp)(
 
 int verificaFimRun(vector<Registro>& vet, size_t i){
     size_t fimrun = 0;
+    size_t a = i;
     if(vet[i+1].cases()>=vet[i].cases()){
         while(vet[i].cases()<=vet[i+1].cases()){
             i++;
-            if( i >= MIN_RUN )
+            if( i >= vet.size() )
                 return fimrun;
             fimrun++;
         }
@@ -56,12 +58,12 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
     else{
         while(vet[i].cases()>=vet[i+1].cases()){
            i++;;
-           if( i >= MIN_RUN )
+           if( i >= vet.size() )
                 return fimrun;
            fimrun++;
         }
         reverse(vet.begin() + i, vet.begin() + fimrun + 1);
-        if(fimrun < MIN_RUN)
+        if(fimrun < a + MIN_RUN)
            fimrun+=MIN_RUN-fimrun;
         return fimrun;
     }
