@@ -82,37 +82,27 @@ Adiciona todos os elementos do Run remanescente para o final do Run ordenado.
 
 /*Merge do Caio*/
 vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp)(const Registro&, const Registro&)) {
-    
-    if(vet1.empty())
+    if (vet1.empty())
         return vet2;
-    if(vet2.empty())
+    if (vet2.empty())
         return vet1;
-    
-    vector<Registro> merged;
 
-    size_t i = 0;
-    size_t j = 0;
-    size_t k = 0;
-    while (i < vet1.size() && j < vet2.size()) {
-        if (comp(vet1[i], vet2[j]) <= 0) {
-            merged.push_back(vet1[i]);
-            i++;
+    vector<Registro> merged;
+    vector<Registro>::iterator vetit1 = vet1.begin();
+    vector<Registro>::iterator vetit2 = vet2.begin();
+
+    while (vetit1 != vet1.end() && vetit2 != vet2.end()) {
+        if (comp(*vetit1, *vetit2) <= 0) {
+            merged.push_back(*vetit1++);
+        } else {
+            merged.push_back(*vetit2++)
         }
-        else {
-            merged.push_back(vet2[j]);
-            j++;
-        }
-        k++;
     }
-    while (i < vet1.size()) {
-        merged.push_back(vet1[i++]);
-        k++;
-        i++;
+    while (vetit1 != vet1.end()) {
+        merged.push_back(*vetit1++);
     }
-    while (j < vet2.size()) {
-        merged.push_back(vet2[j++]);
-        k++;
-        j++;
+    while (vetit2 != vet2.end()) {
+        merged.push_back(*vetit2++);
     }
     return merged;
 }
