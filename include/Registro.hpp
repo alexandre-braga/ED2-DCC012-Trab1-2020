@@ -23,7 +23,7 @@ class Registro
 		int cases() const;
 		int deaths() const;
 
-		int setDate(const std::string& date);
+	int setDate(const std::string& date);
   	int setState(const std::string& state);
   	int setCity(const std::string& city);
   	int setCode(const std::string& code);
@@ -32,6 +32,30 @@ class Registro
 	
   	std::ostream& print(std::ostream& os) const;
   	std::istream& read(std::istream& is);
+
+	static int comparaLocalData(const Registro& r1, const Registro& r2) 
+	{
+		if (r1.state() < r2.state())
+			return -1;
+		if (r2.state() < r1.state())
+			return 1;
+		if (r1.city() < r2.city())
+			return -1;
+		if (r2.city() < r1.city())
+			return 1;
+		if (r1.date() < r2.date())
+			return -1;
+		return 1;
+	};
+
+	static int comparaCasos(const Registro& r1, const Registro& r2) 
+	{
+		if (r1.cases() < r2.cases())
+			return -1;
+		if (r2.cases() < r1.cases())
+			return 1;
+		return 0;
+	};
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Registro& r)
