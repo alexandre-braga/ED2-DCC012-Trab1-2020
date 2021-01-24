@@ -7,8 +7,8 @@
 #include "../include/Registro.hpp"
 using namespace std;
 
-const int MIN_RUN = 64;
-
+const int MIN_RUN = 32;
+const int MAX_RUN = 64;
 
 
 /*Compara Cases*/
@@ -47,7 +47,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
     if(vet[i+1].cases()>=vet[i].cases()){
         while(vet[i].cases()<=vet[i+1].cases()){
             i++;
-            if( i >= vet.size() )
+            if( i >= MAX_RUN )
                 return fimrun;
             fimrun++;
         }
@@ -58,7 +58,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
     else{
         while(vet[i].cases()>=vet[i+1].cases()){
            i++;
-           if( i >= vet.size() )
+           if( i >= MAX_RUN )
                 return fimrun;
            fimrun++;
         }
