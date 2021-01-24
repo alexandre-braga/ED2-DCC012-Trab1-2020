@@ -95,20 +95,24 @@ vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp
     size_t k = 0;
     while (i < vet1.size() && j < vet2.size()) {
         if (comp(vet1[i], vet2[j]) <= 0) {
-            merged[k] = vet1[i];
+            merged.push_back(vet1[i]);
             i++;
         }
         else {
-            merged[k] = vet2[j];
+            merged.push_back(vet2[j]);
             j++;
         }
         k++;
     }
     while (i < vet1.size()) {
-        merged[k++] = vet1[i++];
+        merged.push_back(vet1[i++]);
+        k++;
+        i++;
     }
     while (j < vet2.size()) {
-        merged[k++] = vet2[j++];
+        merged.push_back(vet2[j++]);
+        k++;
+        j++;
     }
     return merged;
 }
