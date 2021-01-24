@@ -47,7 +47,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
     if(vet[i+1].cases()>=vet[i].cases()){
         while(vet[i].cases()<=vet[i+1].cases()){
             i++;
-            if( i >= MAX_RUN )
+            if( i >= MAX_RUN || i >= vet.size())
                 return fimrun;
             fimrun++;
         }
@@ -58,7 +58,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
     else{
         while(vet[i].cases()>=vet[i+1].cases()){
            i++;
-           if( i >= MAX_RUN )
+           if( i >= MAX_RUN || i >= vet.size() )
                 return fimrun;
            fimrun++;
         }
