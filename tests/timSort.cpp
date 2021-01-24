@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <stack>
 #include <limits>
 #include <algorithm>
 
@@ -9,6 +8,8 @@
 using namespace std;
 
 const int MIN_RUN = 64;
+
+
 
 /*Compara Cases*/
 int comp(const Registro& r1, const Registro& r2)
@@ -40,13 +41,13 @@ void insertionSort(vector<Registro>& vet, int inicio, int fim)
 */
 
 int verificaFimRun(vector<Registro>& vet, int a){
-    int fimrun = 0;
-    int i = a;
+    size_t fimrun = 0;
+    size_t i = a;
     if(vet[i+1].cases()>=vet[i].cases()){
         while(vet[i].cases()<=vet[i+1].cases()){
             i++;
-            //if(vet[i] == NULL)
-                //return fimrun;
+            if( i >= vet.size() )
+                return fimrun;
             fimrun++;
         }
         if(fimrun < MIN_RUN)
@@ -56,8 +57,8 @@ int verificaFimRun(vector<Registro>& vet, int a){
     else{
         while(vet[i].cases()>=vet[i+1].cases()){
            i++;;
-           //if(vet[i].cases() == NULL)
-                //return fimrun;
+           if( i >= vet.size() )
+                return fimrun;
            fimrun++;
         }
         reverse(vet.begin() + a, vet.begin() + fimrun);
@@ -81,14 +82,17 @@ Adiciona todos os elementos do Run remanescente para o final do Run ordenado.
 
 /*Merge do Caio*/
 vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp)(const Registro&, const Registro&)) {
+    
+    if(vet1.empty())
+        return vet2;
+    if(vet2.empty())
+        return vet1;
+    
     vector<Registro> merged;
-    //if(vet1 == NULL)
-        //return vet2;
-    //if(vet2 == NULL)
-        //return vet1;
-    int i = 0;
-    int j = 0;
-    int k = 0;
+
+    size_t i = 0;
+    size_t j = 0;
+    size_t k = 0;
     while (i < vet1.size() && j < vet2.size()) {
         if (comp(vet1[i], vet2[j]) <= 0) {
             merged[k] = vet1[i];
@@ -101,14 +105,10 @@ vector<Registro> merge(vector<Registro>& vet1, vector<Registro>& vet2, int(*comp
         k++;
     }
     while (i < vet1.size()) {
-        merged[k] = vet1[i];
-        i++;
-        k++;
+        merged[k++] = vet1[i++];
     }
     while (j < vet2.size()) {
-        merged[k] = vet2[j];
-        j++;
-        k++;
+        merged[k++] = vet2[j++];
     }
     return merged;
 }
@@ -134,38 +134,34 @@ yy
 zzzz
 */
 
-void ajustaPilhaDeRuns (vector<vector<Registro>> pilhaDeRuns, vector<Registro>& vet){
-    int fim = 0;
-    while (pilhaDeRuns.size() >= 2){
-        for(int i=1; i+1 <= pilhaDeRuns.size(); i++){
-            std::vector<Registro> a = pilhaDeRuns[i-1];
-            std::vector<Registro> b = pilhaDeRuns[i];
-            std::vector<Registro> c = pilhaDeRuns[i+1];
-            int x = a.size();
-            int y = b.size();
-            int z = c.size();
-            if(z > x + y){
-                if(x > y)
-                    pilhaDeRuns[i] = merge(pilhaDeRuns[i-1], pilhaDeRuns[i], comp);
+void ajustaPilhaDeRuns (vector<vector<Registro>>& pilhaDeRuns, vector<Registro>& vet){
+     size_t fim = 0;
+
+    while (pilhaDeRuns.size() >= 2) {
+        for (size_t i = 1; i + 1 <= pilhaDeRuns.size(); i++) {
+            std::vector<Registro>& menor = pilhaDeRuns[i-1];
+            std::vector<Registro>& medio = pilhaDeRuns[i];
+            std::vector<Registro>& maior = pilhaDeRuns[i+1];
+            if (maior.size() > menor.size() + medio.size()) {
+                if (menor.size() > medio.size())
+                   medio = merge(pilhaDeRuns[i-1], pilhaDeRuns[i], comp);
                 else
                     break;
-            }
+            } else if (menor.size() > maior.size())
+                medio = merge(pilhaDeRuns[i], pilhaDeRuns[i+1], comp);
             else
-                if(x > z)
-                    pilhaDeRuns[i] = merge(pilhaDeRuns[i], pilhaDeRuns[i+1], comp);
-                else
-                    pilhaDeRuns[i] = merge(pilhaDeRuns[i], pilhaDeRuns[i-1], comp);
-        fim = i;
+                medio = merge(pilhaDeRuns[i], pilhaDeRuns[i-1], comp);
+            fim = i;
         }
     }
-    vet = pilhaDeRuns[fim];
+    std::swap(vet,pilhaDeRuns[fim]);
 }
 
 void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
     vector<vector<Registro>> pilhaDeRuns;
-    for (int i = 0, j = verificaFimRun(vet,i); i < vet.size(); i+=j){   
+    for (size_t i = 0, j = verificaFimRun(vet,i); i < vet.size(); i+=j){   
         insertionSort(vet, i, j); 
-        std::vector<Registro> coord(vet.begin() + 1, vet.begin() + j + 1);
+        std::vector<Registro> coord(vet.begin() + i, vet.begin() + j + 1);
         pilhaDeRuns.push_back(coord);
     }
     ajustaPilhaDeRuns(pilhaDeRuns,vet);
@@ -173,7 +169,7 @@ void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)
 
 int main(int argc, char *argv[]){
 
-    std::vector<Registro> vet;
+    std::vector<Registro> vetRegistros;
 	Registro r;
 	ifstream f;
 	ofstream arquivoSaida;
@@ -195,12 +191,12 @@ int main(int argc, char *argv[]){
 		f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 		while (f >> r) {
-			vet.push_back(r);
+			vetRegistros.push_back(r);
 		}
 
-		timSort(vet, comp);
+		timSort(vetRegistros, comp);
 
-		for (const Registro& r : vet) {
+		for (const Registro& r : vetRegistros) {
 			arquivoSaida << r << '\n';
 		}
 		
@@ -208,7 +204,7 @@ int main(int argc, char *argv[]){
 		std::cerr << "Erro ao abrir o arquivo `" << *argv << "\n";
 		return 2;
 	}
-
+		
 	return 0;
 
 }
