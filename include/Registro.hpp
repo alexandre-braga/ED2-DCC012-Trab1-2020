@@ -1,5 +1,5 @@
 #ifndef REGISTRO_HPP
-#define REGISTRO_HPP 1
+#define REGISTRO_HPP
 
 #include <string>
 #include <ostream>
