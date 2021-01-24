@@ -42,8 +42,8 @@ void insertionSort(vector<Registro>& vet, size_t inicio, size_t fim, int(*comp)(
 */
 
 int verificaFimRun(vector<Registro>& vet, size_t i){
-    size_t fimrun = i;
-    size_t a = i;
+    int fimrun = i;
+    int a = i;
     if(vet[i+1].cases()>=vet[i].cases()){
         while(vet[i].cases()<=vet[i+1].cases()){
             i++;
@@ -52,7 +52,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
             fimrun++;
         }
         if(fimrun < a + MIN_RUN)
-            fimrun += fabs(fimrun - MIN_RUN);
+            fimrun += (int)fabs(fimrun - MIN_RUN);
         return fimrun;
     }
     else{
@@ -64,7 +64,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
         }
         reverse(vet.begin() + i, vet.begin() + fimrun + 1);
         if(fimrun < a + MIN_RUN)
-           fimrun += fabs(fimrun - MIN_RUN);
+           fimrun += (int)fabs(fimrun - MIN_RUN);
         return fimrun;
     }
 }
