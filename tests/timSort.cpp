@@ -45,7 +45,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
     if(vet[i+1].cases()>=vet[i].cases()){
         while(vet[i].cases()<=vet[i+1].cases()){
             i++;
-            if( i >= vet.size() )
+            if( i >= MIN_RUN )
                 return fimrun;
             fimrun++;
         }
@@ -56,7 +56,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
     else{
         while(vet[i].cases()>=vet[i+1].cases()){
            i++;;
-           if( i >= vet.size() )
+           if( i >= MIN_RUN )
                 return fimrun;
            fimrun++;
         }
@@ -152,7 +152,7 @@ void ajustaPilhaDeRuns (vector<vector<Registro>>& pilhaDeRuns, vector<Registro>&
 
 void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
     vector<vector<Registro>> pilhaDeRuns;
-    for (size_t i = 0, j = verificaFimRun(vet,i); i < vet.size(); i+=j){   
+    for (size_t i = 0, size_t j = verificaFimRun(vet,i); i < vet.size(); i+=j){  
         insertionSort(vet, i, j, comp); 
         std::vector<Registro> coord(vet.begin() + i, vet.begin() + j + 1);
         pilhaDeRuns.push_back(coord);
