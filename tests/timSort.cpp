@@ -39,9 +39,14 @@ void insertionSort(RegIterator inicio, RegIterator fim, int(*comp)(const Registr
 -wikipedia
 */
 
-int verificaFimRun(vector<Registro>& vet, size_t i){
-    int fimrun = i;
-    int a = i;
+int calculaFimRun(RegIterator inicio, RegIterator limiteSuperior){
+    RegIterator fimrun = inicio;
+    RegIterator a = inicio;
+    if(inicio == limiteSuperior){
+        return inicio;
+    }
+
+    
     if(vet[i+1].cases()>=vet[i].cases()){
         while(vet[i].cases()<=vet[i+1].cases()){
             i++;
@@ -148,12 +153,10 @@ void ajustaPilhaDeRuns (vector<vector<Registro>>& pilhaDeRuns, vector<Registro>&
 
 void timSort(RegIterator begin, RegIterator end, int(*comp)(const Registro&, const Registro&)){
     vector<vector<Registro>> pilhaDeRuns;
-
-    for (RegIterator i = begin, j ; i != end; i = j){ 
-
-        /*assert((j = verificaFimRun(vet,i)) >= 0);*/
-        insertionSort(vet, i, j, comp);
-        pilhaDeRuns.push_back({i,j});
+    for (RegIterator lo = begin, ho ; lo != end; i = ho){ 
+        ho = calculaFimRun(lo, end);
+        insertionSort(lo, ho, comp); 
+        pilhaDeRuns.push_back({lo,ho});
     }
     ajustaPilhaDeRuns(pilhaDeRuns,vet, comp);
 }
