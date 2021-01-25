@@ -20,5 +20,5 @@ print(df.head())
 
 melt = pd.melt(df, id_vars=['N','algoritmo'], value_vars=['comparacoes','trocas','tempo_us'])
 sns.catplot(kind='point', data=melt, x='N', y='value', hue='algoritmo', col='variable', ci='sd', sharey=False)
-plt.show()
 plt.savefig('grafico.png', dpi=128)
+plt.show()
