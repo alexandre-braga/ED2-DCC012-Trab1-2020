@@ -3,9 +3,12 @@
 #include <vector>
 #include <limits>
 #include <algorithm>
+#include <cmath>
+#include <cassert>
 
 #include "../include/Registro.hpp"
 using namespace std;
+using RegIterator = vector<Registro>::iterator; 
 
 const int MIN_RUN = 32;
 const int MAX_RUN = 64;
@@ -22,19 +25,13 @@ int comp(const Registro& r1, const Registro& r2)
 }
 
 /*Insertion Sort: */
-/*j-- pra um j = 0*/
-void insertionSort(vector<Registro>& vet, size_t inicio, size_t fim, int(*comp)(const Registro&, const Registro&))    
+void insertionSort(RegIterator inicio, RegIterator fim, int(*comp)(const Registro&, const Registro&))    
 { 
-    for (size_t i = inicio + 1; i <= fim; i++) 
-    { 
-        Registro pivo = vet[i]; 
-        size_t j = i - 1; 
-        while (j > inicio && comp(vet[j],pivo)){ 
-            vet[j+1] = vet[j]; 
-            j--; 
-        } 
-        vet[j+1] = pivo; 
-    } 
+    for(RegIterator i = inicio + 1; i < fim; i++){
+        for(RegIterator j = i; j > inicio && comp(*j, *(j-1)) < 0; j--){
+            std::swap(*j, *(j-1));
+        }
+    }
 } 
 
 /*Começando a partir da posição do elemento atual, procure o Run (um sub-vetor ordenado) no vetor de entrada. Por definição o Run será pelo menos o elemento atual e o próximo (pois formará um vetor ordenado, seja crescente ou decrescente), sendo que a composição de mais elementos no Run dependerá da forma como os elementos estão organizados. O próximo elemento é considerado se ao considerá-lo no Run atual, o Run continue ordenado. Se o Run final está ordenado de forma decrescente, os elementos são "reordenados" em uma ordem crescente (por meio de um algoritmo  simples de inversão de vetor).
@@ -61,7 +58,7 @@ int verificaFimRun(vector<Registro>& vet, size_t i){
         }
         reverse(vet.begin() + i, vet.begin() + fimrun + 1);
     }
-    if(fimrun < a + MIN_RUN)
+    if(fimrun < a + MIN_RUN) 
         fimrun += (int)fabs(fimrun - a - MIN_RUN);
     return fimrun;
 }
@@ -148,16 +145,14 @@ void ajustaPilhaDeRuns (vector<vector<Registro>>& pilhaDeRuns, vector<Registro>&
     std::swap(vet,pilhaDeRuns[fim]);
 }
 
-void timSort(vector<Registro>& vet, int(*comp)(const Registro&, const Registro&)){
+void timSort(RegIterator begin, RegIterator end, int(*comp)(const Registro&, const Registro&)){
     vector<vector<Registro>> pilhaDeRuns;
-    for (size_t i = 0, j = 0; i < vet.size(); i+=j){ 
-        j = verificaFimRun(vet,i); 
+
+    for (RegIterator i = begin, j ; i != end; i = j){ 
+
+        assert((j = verificaFimRun(vet,i)) >= 0);
         insertionSort(vet, i, j, comp); 
         std::vector<Registro> coord(vet.begin() + i, vet.begin() + j + 1);
-        i = 156
-        j = 156
-        i = 312
-        j = 312
         pilhaDeRuns.push_back(coord);
     }
     ajustaPilhaDeRuns(pilhaDeRuns,vet, comp);
@@ -200,7 +195,7 @@ int main(int argc, char *argv[]){
 		std::cerr << "Erro ao abrir o arquivo `" << *argv << "\n";
 		return 2;
 	}
-		
+	
 	return 0;
 
 }
