@@ -134,7 +134,7 @@ void ajustaPilhaDeRuns (vector<vector<Registro>>& pilhaDeRuns, vector<Registro>&
             std::vector<Registro>& menor = pilhaDeRuns[i-1];
             std::vector<Registro>& medio = pilhaDeRuns[i];
             std::vector<Registro>& maior = pilhaDeRuns[i+1];
-            if (maior.size() > menor.size() + medio.size()) {
+            if (maior.size() >= menor.size() + medio.size()) {
                 /*if (menor.size() > medio.size())*/
                    medio = merge(pilhaDeRuns[i-1], pilhaDeRuns[i], comp);
             }
