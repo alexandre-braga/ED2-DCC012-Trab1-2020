@@ -35,37 +35,36 @@ void insertionSort(RegIterator inicio, RegIterator fim, int(*comp)(const Registr
 } 
 
 
-/*Começando a partir da posição do elemento atual, procure o Run (um sub-vetor ordenado) no vetor de entrada. Por definição o Run será pelo menos o elemento atual e o próximo (pois formará um vetor ordenado, seja crescente ou decrescente), sendo que a composição de mais elementos no Run dependerá da forma como os elementos estão organizados. O próximo elemento é considerado se ao considerá-lo no Run atual, o Run continue ordenado. Se o Run final está ordenado de forma decrescente, os elementos são "reordenados" em uma ordem crescente (por meio de um algoritmo  simples de inversão de vetor).
--wikipedia
-*/
-
+/*Calcula tamanho das Runs: */
 int calculaFimRun(RegIterator inicio, RegIterator limiteSuperior){
     RegIterator fimrun = inicio;
     RegIterator a = inicio;
-    if(inicio == limiteSuperior){
+    size_t totalDeElementos = limiteSuperior - inicio;
+    if(totalDeElementos <= 1){
         return inicio;
     }
-
-    
-    if(vet[i+1].cases()>=vet[i].cases()){
-        while(vet[i].cases()<=vet[i+1].cases()){
-            i++;
-            if( i >= a + MAX_RUN || i >= vet.size())
+    if((a + 1)->cases() >= a->cases()){
+        while((a + 1)->cases() >= a->cases()){
+            a++;
+            /*se o tamanho atual n é maior q o max da run 64*/
+            if( a - inicio >= MAX_RUN || a >= limiteSuperior  )
                 return fimrun;
             fimrun++;
         }
     }
     else{
-        while(vet[i].cases()>=vet[i+1].cases()){
-           i++;
-           if( i >= a + MAX_RUN || i >= vet.size() )
+        while((a + 1)->cases() <= a->cases()){
+            a++;
+            /*se o tamanho atual n é maior q o max da run 64*/
+            if( a - inicio >= MAX_RUN || a >= limiteSuperior  )
                 return fimrun;
-           fimrun++;
+            fimrun++;
         }
-        reverse(vet.begin() + i, vet.begin() + fimrun + 1);
+        reverse(a, fimrun + 1);
     }
-    if(fimrun < a + MIN_RUN) 
-        fimrun += (int)fabs(fimrun - a - MIN_RUN);
+    /*se o tamanho atual n é menor q o min da run 32*/
+    if(fimrun - a < MIN_RUN) 
+        fimrun = inicio + MIN_RUN;
     return fimrun;
 }
 
