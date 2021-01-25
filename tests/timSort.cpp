@@ -36,7 +36,7 @@ void insertionSort(RegIterator inicio, RegIterator fim, int(*comp)(const Registr
 
 
 /*Calcula tamanho das Runs: */
-int calculaFimRun(RegIterator inicio, RegIterator limiteSuperior){
+RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior){
     RegIterator fimrun = inicio;
     RegIterator a = inicio;
     size_t totalDeElementos = limiteSuperior - inicio;
@@ -64,7 +64,7 @@ int calculaFimRun(RegIterator inicio, RegIterator limiteSuperior){
     }
     /*se o tamanho atual n é menor q o min da run 32*/
     if(fimrun - a < MIN_RUN) 
-        fimrun = inicio + MIN_RUN;
+        fimrun = inicio + MIN_RUN + 1;
     return fimrun;
 }
 
@@ -136,10 +136,14 @@ void ajustaPilhaDeRuns (vector<vector<Registro>>& pilhaDeRuns, vector<Registro>&
             std::vector<Registro>& menor = pilhaDeRuns[i-1];
             std::vector<Registro>& medio = pilhaDeRuns[i];
             std::vector<Registro>& maior = pilhaDeRuns[i+1];
+
+
             if (maior.size() >= menor.size() + medio.size()) {
                 /*if (menor.size() > medio.size())*/
                    medio = merge(pilhaDeRuns[i-1], pilhaDeRuns[i], comp);
-            }
+            } /*loop infinito por aqui*/
+
+
             else if (menor.size() > maior.size())
                 medio = merge(pilhaDeRuns[i], pilhaDeRuns[i+1], comp);
             else if (menor.size() < maior.size())
@@ -157,6 +161,7 @@ void timSort(RegIterator begin, RegIterator end, int(*comp)(const Registro&, con
         insertionSort(lo, ho, comp); 
         pilhaDeRuns.push_back({lo,ho});
     }
+    /*amanha saporra daqui:*/
     ajustaPilhaDeRuns(pilhaDeRuns,vet, comp);
 }
 
