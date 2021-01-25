@@ -34,6 +34,7 @@ void insertionSort(RegIterator inicio, RegIterator fim, int(*comp)(const Registr
     }
 } 
 
+
 /*Começando a partir da posição do elemento atual, procure o Run (um sub-vetor ordenado) no vetor de entrada. Por definição o Run será pelo menos o elemento atual e o próximo (pois formará um vetor ordenado, seja crescente ou decrescente), sendo que a composição de mais elementos no Run dependerá da forma como os elementos estão organizados. O próximo elemento é considerado se ao considerá-lo no Run atual, o Run continue ordenado. Se o Run final está ordenado de forma decrescente, os elementos são "reordenados" em uma ordem crescente (por meio de um algoritmo  simples de inversão de vetor).
 -wikipedia
 */
@@ -150,10 +151,9 @@ void timSort(RegIterator begin, RegIterator end, int(*comp)(const Registro&, con
 
     for (RegIterator i = begin, j ; i != end; i = j){ 
 
-        assert((j = verificaFimRun(vet,i)) >= 0);
-        insertionSort(vet, i, j, comp); 
-        std::vector<Registro> coord(vet.begin() + i, vet.begin() + j + 1);
-        pilhaDeRuns.push_back(coord);
+        /*assert((j = verificaFimRun(vet,i)) >= 0);*/
+        insertionSort(vet, i, j, comp);
+        pilhaDeRuns.push_back({i,j});
     }
     ajustaPilhaDeRuns(pilhaDeRuns,vet, comp);
 }
@@ -180,12 +180,12 @@ int main(int argc, char *argv[]){
 
 	if (f.is_open()) {
 		f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-		while (f >> r) {
+        int i = 0;
+		while (f >> r && i++ < 32) {
 			vetRegistros.push_back(r);
 		}
 
-		timSort(vetRegistros, comp);
+		insertionSort(vetRegistros.begin(), vetRegistros.end(), comp);
 
 		for (const Registro& r : vetRegistros) {
 			arquivoSaida << r << '\n';
