@@ -20,16 +20,8 @@ void calculaTotalDiarios(std::vector<Registro>& vet)
 
 	while ((next = it + 1) != vet.rend()) {
 		if (it->code() == next->code()) {
-			int c = it->cases() - next->cases();
-			int d = it->deaths() - next->deaths();
-			if(c >= 0) 
-				it->setCases(c);
-			else
-				it->setCases(0);
-			if(d >= 0) 
-				it->setDeaths(d);
-			else
-				it->setDeaths(0);
+			it->setCases(it->cases() - next->cases());
+			it->setDeaths(it->deaths() - next->deaths());
 		}
 		it = next;
 	}
