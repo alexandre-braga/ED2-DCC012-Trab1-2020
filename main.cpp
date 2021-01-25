@@ -126,6 +126,8 @@ int main(int argc, char *argv[])
 		fout.close();
 
 		std::vector<Registro> vet;
+
+		// matrizes 3d de valores
 		int matrizComp[N_ALGORITMOS][N][M] = {};
 		int matrizTrocas[N_ALGORITMOS][N][M] = {};
 		
@@ -133,6 +135,7 @@ int main(int argc, char *argv[])
 		std::chrono::steady_clock::time_point end;
 		int matrizTempos[N_ALGORITMOS][N][M] = {};
 
+		// matrizes 2d de médias
 		int mediasComp[N_ALGORITMOS][N] = {};
 		int stdComp[N_ALGORITMOS][N] = {};
 		int mediasTrocas[N_ALGORITMOS][N] = {};
@@ -151,13 +154,31 @@ int main(int argc, char *argv[])
 				end = std::chrono::steady_clock::now();
 				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 
+				/*
 				// Preencher com outros algoritmos
+				begin = std::chrono::steady_clock::now();
+				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
+				end = std::chrono::steady_clock::now();
+				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				
+				begin = std::chrono::steady_clock::now();
+				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
+				end = std::chrono::steady_clock::now();
+				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				
+				begin = std::chrono::steady_clock::now();
+				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
+				end = std::chrono::steady_clock::now();
+				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				*/
 			}
 
 			// Calcular medias e desvio padrao para cada algoritmo
 			for(size_t codigo = 0; codigo < N_ALGORITMOS; ++codigo)
 			{
 				// Media de comparacoes
+				// Passa para a função um vetor 1d pertencente à matriz 3d de valores
+				// Guarda a média do vetor em uma posição na matriz 2d de médias
 				mediasComp[codigo][i] = calculaMedia(matrizComp[codigo][i], M);
 				stdComp[codigo][i] = pow(calculaVariancia(matrizComp[codigo][i], M, mediasComp[codigo][i]), 0.5);
 				// Media de trocas
