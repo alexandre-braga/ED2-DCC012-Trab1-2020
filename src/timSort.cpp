@@ -71,6 +71,9 @@ vector<Registro> merge(pair<RegIterator,RegIterator>& leftRun, pair<RegIterator,
         temp = new Registro[tamanhoTemp];
         for(size_t i = 0; i < tamanhoTemp; i++)
             temp[i] = std::move(*(rightRun.first + (i)));
+        for(size_t j = leftRun.second; j > leftRun.first; j--)
+            vet[j]+=4
+        }
     }
     else{
         tamanhoTemp = leftRunLen;
@@ -100,33 +103,32 @@ vector<Registro> merge(pair<RegIterator,RegIterator>& leftRun, pair<RegIterator,
     return merged;
 }
 
-/*Faz o merge das Runs em ordem crescente, e mantém a estabilidade */
-void ajustaPilhaDeRuns (vector<pair<RegIterator,RegIterator>>& pilhaDeRuns, vector<Registro>& vet, compRegFunc comp)
+/*Faz o merge das Runs atuais em ordem crescente, e mantém a estabilidade */
+void ajustaSegmentoDeRunsDinamicamente (vector<pair<RegIterator,RegIterator>>& pilhaDeRuns, vector<Registro>& vet, compRegFunc comp)
 {
-    while (pilhaDeRuns.size() >= 3) { //segmentation fault here
-        std::<pair<RegIterator,RegIterator>>& primeiro = pilhaDeRuns[pilhaDeRuns.size() - 1];
-        std::<pair<RegIterator,RegIterator>>& segundo = pilhaDeRuns[pilhaDeRuns.size() - 2];
-        std::<pair<RegIterator,RegIterator>>& terceiro = pilhaDeRuns[pilhaDeRuns.size() - 3];
-        size_t primeiroLen = primeiro.first - primeiro.second;
-        size_t segundoLen = segundo.first - segundo.second;
-        size_t terceiroLen = terceiro.first - terceiro.second;
+    if (pilhaDeRuns.size() >= 3) {
+        bool segmentoOrdenado = false;
+        while(!segmentoOrdenado && pilhaDeRuns.size() > 3){
+            //a nomenclatura representa o segmento de 3 atual
+            std::<pair<RegIterator,RegIterator>>& topo = pilhaDeRuns[pilhaDeRuns.size() - 1];
+            std::<pair<RegIterator,RegIterator>>& meio = pilhaDeRuns[pilhaDeRuns.size() - 2];
+            std::<pair<RegIterator,RegIterator>>& fundo = pilhaDeRuns[pilhaDeRuns.size() - 3];
+            size_t topoLen = topo.first - topo.second;
+            size_t meioLen = meio.first - meio.second;
+            size_t fundoLen = fundo.first - fundo.second;
 
-        if (terceiroLen >= primeiroLen + segundoLen) {
-            if (primeiroLen > segundoLen)
-               segundo = merge(primeiro, segundo, comp);
-            else
-                break; //loop here
+            if (topoLen > fundoLen + meioLen) {
+                if (meioLen > fundoLen)
+                    segmentoOrdenado = true;
+                else
+                    meio = merge(fundo, meio, comp);
+            }
+            else if (fundoLen >= topoLen)
+                meio = merge(meio, topo, comp);
+            else if (fundoLen < topoLen)
+                meio = merge(meio, fundo, comp);
         }
-        //a unica dif do do indiano: e q n uso min aqui uso 2 if
-        else if (primeiroLen > terceiroLen)
-            segundo = merge(segundo, terceiro, comp);
-        else if (primeiroLen < terceiroLen)
-            segundo = merge(segundo, primeiro, comp);
-
     }
-    primeiro = merge(primeiro, segundo, comp);
-
-    std::swap(vet,pilhaDeRuns[fim]);
 }
 
 void timSort(RegIterator begin, RegIterator end, compRegFunc comp)
@@ -140,6 +142,6 @@ void timSort(RegIterator begin, RegIterator end, compRegFunc comp)
             cout << "Error ho > end\n";
         insertionSort(lo, ho, comp); 
         pilhaDeRuns.push_back({lo,ho});
+        ajustaSegmentoDeRunsDinamicamente(pilhaDeRuns, vet, comp);
     }
-    //ajustaPilhaDeRuns(pilhaDeRuns, vet, comp);
 }
