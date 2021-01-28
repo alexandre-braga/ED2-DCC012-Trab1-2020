@@ -21,14 +21,6 @@ void calculaTotalDiarios(vector<Registro>& vet)
 		if (it->code() == next->code()) {
 			int c = it->cases() - next->cases();
 			int d = it->deaths() - next->deaths();
-			if(c >= 0) 
-				it->setCases(c);
-			else
-				it->setCases(0);
-			if(d >= 0) 
-				it->setDeaths(d);
-			else
-				it->setDeaths(0);
 		}
 		it = next;
 	}
