@@ -11,8 +11,8 @@ using RegIterator = vector<Registro>::iterator;
 /*Insertion Sort: */
 void insertionSort(RegIterator inicio, RegIterator fim, compRegFunc comp)    
 { 
-    for(RegIterator i = inicio + 1; i < fim; i++){
-        for(RegIterator j = i; j > inicio && comp(*j, *(j-1)) < 0; j--){
+    for (RegIterator i = inicio + 1; i < fim; i++) {
+        for (RegIterator j = i; j > inicio && comp(*j, *(j-1)) < 0; j--) {
             std::swap(*j, *(j-1));
         }
     }
@@ -25,33 +25,35 @@ RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
     RegIterator a = inicio;
     size_t totalDeElementos = limiteSuperior - inicio;
 
-    if(totalDeElementos <= 1){
+    if (totalDeElementos <= 1) {
         return inicio;
     }
 
-    if((a + 1)->cases() >= a->cases()){
-        while((a + 1)->cases() >= a->cases()){
+    if ((a + 1)->cases() >= a->cases()) {
+        while ((a + 1)->cases() >= a->cases()) {
             a++;
             /*se o tamanho atual n é maior q o max da run 64*/
-            if( a - inicio >= MAX_RUN || a >= limiteSuperior  )
+            if (a - inicio >= MAX_RUN || a >= limiteSuperior) {
                 return fimrun;
+            }
             fimrun++;
         }
-    }
-    else{
-        while((a + 1)->cases() <= a->cases()){
+    } else {
+        while ((a + 1)->cases() <= a->cases()) {
             a++;
-            /*se o tamanho atual n é maior q o max da run 64*/
-            if( a - inicio >= MAX_RUN || a >= limiteSuperior  )
+            if( a - inicio >= MAX_RUN || a >= limiteSuperior  ) {
                 return fimrun;
+            }
             fimrun++;
         }
         reverse(a, fimrun + 1);
     }
 
     /*se o tamanho atual n é menor q o min da run 32*/
-    if(fimrun - a < MIN_RUN) 
-        fimrun = (inicio + MIN_RUN < limiteSuperior) ? inicio + MIN_RUN : limiteSuperior;
+    if (fimrun - a < MIN_RUN) {
+        fimrun = (inicio + MIN_RUN < limiteSuperior)
+            ? (inicio + MIN_RUN) : limiteSuperior;
+    }
     return fimrun;
 }
 
@@ -66,16 +68,16 @@ vector<Registro> merge(pair<RegIterator,RegIterator>& leftRun, pair<RegIterator,
     size_t tamanhoTemp;
 
     //Aloca um vetor temp com len da menor Run, e move os elementos da menor Run pra temp
-    if(rightRunLen < leftRunLen){
+    if (rightRunLen < leftRunLen) {
         tamanhoTemp = rightRunLen;
         temp = new Registro[tamanhoTemp];
-        for(size_t i = 0; i < tamanhoTemp; i++)
+        for(size_t i = 0; i < tamanhoTemp; i++) {
             temp[i] = std::move(*(rightRun.first + (i)));
-        for(size_t j = leftRun.second; j > leftRun.first; j--)
+        }
+        for(size_t j = leftRun.second; j > leftRun.first; j--) {
             vet[j]+=4
         }
-    }
-    else{
+    } else {
         tamanhoTemp = leftRunLen;
         temp = new Registro[tamanhoTemp];
         for(size_t i = 0; i < tamanhoTemp; i++)
@@ -108,7 +110,7 @@ void ajustaSegmentoDeRunsDinamicamente (vector<pair<RegIterator,RegIterator>>& p
 {
     if (pilhaDeRuns.size() >= 3) {
         bool segmentoOrdenado = false;
-        while(!segmentoOrdenado && pilhaDeRuns.size() > 3){
+        while (!segmentoOrdenado && pilhaDeRuns.size() > 3) {
             //a nomenclatura representa o segmento de 3 atual
             std::<pair<RegIterator,RegIterator>>& topo = pilhaDeRuns[pilhaDeRuns.size() - 1];
             std::<pair<RegIterator,RegIterator>>& meio = pilhaDeRuns[pilhaDeRuns.size() - 2];
@@ -118,28 +120,26 @@ void ajustaSegmentoDeRunsDinamicamente (vector<pair<RegIterator,RegIterator>>& p
             size_t fundoLen = fundo.first - fundo.second;
 
             if (topoLen > fundoLen + meioLen) {
-                if (meioLen > fundoLen)
+                if (meioLen > fundoLen) {
                     segmentoOrdenado = true;
-                else
+                } else {
                     meio = merge(fundo, meio, comp);
-            }
-            else if (fundoLen >= topoLen)
+                }
+            } else if (fundoLen >= topoLen) {
                 meio = merge(meio, topo, comp);
-            else if (fundoLen < topoLen)
+            } else if (fundoLen < topoLen) {
                 meio = merge(meio, fundo, comp);
+            }
         }
     }
 }
 
 void timSort(RegIterator begin, RegIterator end, compRegFunc comp)
 {
-    cerr << "inicio timsort\n";
     std::vector<std::pair<RegIterator,RegIterator>> pilhaDeRuns;
 
-    for (RegIterator lo = begin, ho ; lo < end; lo = ho){ 
+    for (RegIterator lo = begin, ho ; lo < end; lo = ho) { 
         ho = calculaFimRun(lo, end);
-        if(ho > end)
-            cout << "Error ho > end\n";
         insertionSort(lo, ho, comp); 
         pilhaDeRuns.push_back({lo,ho});
         ajustaSegmentoDeRunsDinamicamente(pilhaDeRuns, vet, comp);
