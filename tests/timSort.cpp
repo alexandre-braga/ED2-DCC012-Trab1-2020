@@ -3,7 +3,7 @@
 #include <vector>
 #include <limits>
 
-#include "../include/timSort.hpp"
+#include "../include/sortalgos.hpp"
 #include "../include/Registro.hpp"
 
 #define MAX_REGISTROS 1000
@@ -24,14 +24,14 @@ int main(int argc, char *argv[])
 {
     const char* nomePrograma = *argv; 
 
-    if(argc != 2){
+    if (argc != 2) {
         cerr << "Uso: " << nomePrograma << " ARQUIVOCSV\n";
         return 1;
     }
 
     ifstream arquivoDeEntrada(*++argv);
 
-    if(!arquivoDeEntrada.is_open()){
+    if (!arquivoDeEntrada.is_open()) {
         cerr << nomePrograma << ": Falha ao abrir arquivo\n";
         return 2;
     }
@@ -41,13 +41,13 @@ int main(int argc, char *argv[])
     arquivoDeEntrada.ignore(numeric_limits<streamsize>::max(),'\n');
     Registro r;
 
-    while(arquivoDeEntrada >> r && ++count < MAX_REGISTROS){
+    while (arquivoDeEntrada >> r && ++count < MAX_REGISTROS) {
         vet.push_back(std::move(r));
     }
 
     timSort(vet.begin(), vet.end(), compByCases);
 
-    for(auto& registro : vet){
+    for (auto& registro : vet) {
         cout << registro << '\n';
     }
 	return 0;
