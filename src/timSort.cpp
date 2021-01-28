@@ -1,4 +1,5 @@
-#include "../include/timSort.hpp"
+#include "../include/sortalgos.hpp"
+
 #include <algorithm>
 #include <iostream>
 

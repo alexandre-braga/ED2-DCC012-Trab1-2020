@@ -1,5 +1,5 @@
-#ifndef TIM_SORT_HPP
-#define TIM_SORT_HPP 1
+#ifndef SORT_ALGOS_HPP
+#define SORT_ALGOS_HPP 1
 
 #include <vector>
 #include "Registro.hpp"
@@ -9,4 +9,6 @@ using compRegFunc = int(*)(const Registro&, const Registro&);
 
 void timSort(RegIterator begin, RegIterator end, compRegFunc comp);
 
-#endif /* TIM_SORT_HPP */
+void heapSort(vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp); 
+
+#endif /* SORT_ALGOS_HPP */

@@ -1,9 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <limits>
-
-#include "../include/Registro.hpp"
+#include "../include/sortalgos.hpp"
 
 using namespace std;
 
@@ -13,7 +8,7 @@ using namespace std;
 
 #define right(__i) ((__i) * 2 + 2)
 
-void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &trocas, 
+static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &trocas, 
                     int(*comp)(const Registro&, const Registro&))
 {
     int l = left(i);
@@ -40,7 +35,7 @@ void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &trocas,
     }
 }
 
-void buildMaxHeap(vector<Registro>& vet, int &comparacoes, int &trocas, 
+static void buildMaxHeap(vector<Registro>& vet, int &comparacoes, int &trocas, 
                     int(*comp)(const Registro&, const Registro&))
 {
     for (int i = vet.size()/2 - 1; i >= 0; i--) {
