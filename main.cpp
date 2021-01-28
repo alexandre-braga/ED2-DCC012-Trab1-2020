@@ -29,13 +29,8 @@ void calculaTotalDiarios(vector<Registro>& vet)
 void escreverArquivo(vector<Registro>& vet, ofstream& file)
 {
 	file << "date,state,name,code,cases,deaths" << std::endl;
-	for (auto it = vet.begin(); it != vet.end(); ++it) {
-		file << it->date()   << ",";
-		file << it->state()  << ","; 
-		file << it->city()   << ",";
-		file << it->code()   << ",";
-		file << it->cases()  << ",";
-		file << it->deaths() << std::endl;
+	for (const auto& r : vet) {
+		file << r << '\n';
 	}
 }
 
