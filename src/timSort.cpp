@@ -7,10 +7,34 @@
 #define MAX_RUN  64
 
 using namespace std;
-using RegIterator = vector<Registro>::iterator;
+
+class Chunk
+{
+private:
+    pair<RegIterator, RegIterator> _info;
+public:
+    Chunk(RegIterator inicio, RegIterator fim):
+        _info { inicio, fim }
+    {}
+
+    const RegIterator& inicio() const
+    {
+        return this->_info.first;
+    }
+
+    const RegIterator& fim() const
+    {
+        return this->_info.second;
+    }
+
+    size_t tamanho() const
+    {
+        return (this->fim() - this->inicio());
+    }
+};
 
 /*Insertion Sort: */
-void insertionSort(RegIterator inicio, RegIterator fim, compRegFunc comp)    
+static void insertionSort(RegIterator inicio, RegIterator fim, compRegFunc comp)    
 { 
     for (RegIterator i = inicio + 1; i < fim; i++) {
         for (RegIterator j = i; j > inicio && comp(*j, *(j-1)) < 0; j--) {
@@ -20,7 +44,7 @@ void insertionSort(RegIterator inicio, RegIterator fim, compRegFunc comp)
 } 
 
 /*Calcula tamanho das Runs: */
-RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
+static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
 {
     RegIterator fimrun = inicio;
     RegIterator a = inicio;
@@ -61,74 +85,72 @@ RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
 /*Merge Sort:*/
 #define min(x,y) (((x) < (y)) ? (x) : (y))
 
-vector<Registro> merge(pair<RegIterator,RegIterator>& leftRun, pair<RegIterator,RegIterator>& rightRun, vector<Registro>& vet, compRegFunc comp)
+static Chunk merge(Chunk& leftRun, Chunk& rightRun ,compRegFunc comp)
 {                              
-    size_t leftRunLen = leftRun.first - leftRun.second;
-    size_t rightRunLen = rightRun.first - rightRun.second;
-    unique_ptr<Registro> temp = new Registro[min(leftRunLen,rightRunLen)];
-    size_t tamanhoTemp;
+    return Chunk(leftRun.inicio(), rightRun.fim());
+//     size_t leftRunLen = leftRun.first - leftRun.second;
+//     size_t rightRunLen = rightRun.first - rightRun.second;
+//     unique_ptr<Registro> temp = new Registro[min(leftRunLen,rightRunLen)];
+//     size_t tamanhoTemp;
 
-    //Aloca um vetor temp com len da menor Run, e move os elementos da menor Run pra temp
-    if (rightRunLen < leftRunLen) {
-        tamanhoTemp = rightRunLen;
-        temp = new Registro[tamanhoTemp];
-        for(size_t i = 0; i < tamanhoTemp; i++) {
-            temp[i] = std::move(*(rightRun.first + (i)));
-        }
-        for(size_t j = leftRun.second; j > leftRun.first; j--) {
-            vet[j]+=4
-        }
-    } else {
-        tamanhoTemp = leftRunLen;
-        temp = new Registro[tamanhoTemp];
-        for(size_t i = 0; i < tamanhoTemp; i++)
-            temp[i] = std::move(*(leftRun.first + (i)));
-    }
+//     //Aloca um vetor temp com len da menor Run, e move os elementos da menor Run pra temp
+//     if (rightRunLen < leftRunLen) {
+//         tamanhoTemp = rightRunLen;
+//         temp = new Registro[tamanhoTemp];
+//         for(size_t i = 0; i < tamanhoTemp; i++) {
+//             temp[i] = std::move(*(rightRun.first + (i)));
+//         }
+//         for(size_t j = leftRun.second; j > leftRun.first; j--) {
+//             vet[j]+=4
+//         }
+//     } else {
+//         tamanhoTemp = leftRunLen;
+//         temp = new Registro[tamanhoTemp];
+//         for(size_t i = 0; i < tamanhoTemp; i++)
+//             temp[i] = std::move(*(leftRun.first + (i)));
+//     }
 
-    pont do leftRun = min(pont do temp, pont do runmaior){
-        pont do selecionado++;
-        pont do leftRun++;
-    }
+//     pont do leftRun = min(pont do temp, pont do runmaior){
+//         pont do selecionado++;
+//         pont do leftRun++;
+//     }
 
-    while (vetit1 != vet1.end() && vetit2 != vet2.end()) {
-        if (comp(*vetit1, *vetit2) <= 0) {
-            merged.push_back(*vetit1++);
-        } else {
-            merged.push_back(*vetit2++);
-        }
-    }
-    while (vetit1 != vet1.end()) {
-        merged.push_back(*vetit1++);
-    }
-    while (vetit2 != vet2.end()) {
-        merged.push_back(*vetit2++);
-    }
-    return merged;
+//     while (vetit1 != vet1.end() && vetit2 != vet2.end()) {
+//         if (comp(*vetit1, *vetit2) <= 0) {
+//             merged.push_back(*vetit1++);
+//         } else {
+//             merged.push_back(*vetit2++);
+//         }
+//     }
+//     while (vetit1 != vet1.end()) {
+//         merged.push_back(*vetit1++);
+//     }
+//     while (vetit2 != vet2.end()) {
+//         merged.push_back(*vetit2++);
+//     }
+//     return merged;
 }
 
 /*Faz o merge das Runs atuais em ordem crescente, e mantém a estabilidade */
-void ajustaSegmentoDeRunsDinamicamente (vector<pair<RegIterator,RegIterator>>& pilhaDeRuns, vector<Registro>& vet, compRegFunc comp)
+static void ajustaSegmentoDeRunsDinamicamente(vector<Chunk>& pilhaDeRuns, compRegFunc comp)
 {
     if (pilhaDeRuns.size() >= 3) {
         bool segmentoOrdenado = false;
         while (!segmentoOrdenado && pilhaDeRuns.size() > 3) {
             //a nomenclatura representa o segmento de 3 atual
-            std::<pair<RegIterator,RegIterator>>& topo = pilhaDeRuns[pilhaDeRuns.size() - 1];
-            std::<pair<RegIterator,RegIterator>>& meio = pilhaDeRuns[pilhaDeRuns.size() - 2];
-            std::<pair<RegIterator,RegIterator>>& fundo = pilhaDeRuns[pilhaDeRuns.size() - 3];
-            size_t topoLen = topo.first - topo.second;
-            size_t meioLen = meio.first - meio.second;
-            size_t fundoLen = fundo.first - fundo.second;
+            Chunk& topo = pilhaDeRuns[pilhaDeRuns.size() - 1];
+            Chunk& meio = pilhaDeRuns[pilhaDeRuns.size() - 2];
+            Chunk& fundo = pilhaDeRuns[pilhaDeRuns.size() - 3];
 
-            if (topoLen > fundoLen + meioLen) {
-                if (meioLen > fundoLen) {
+            if (topo.tamanho() > fundo.tamanho() + meio.tamanho()) {
+                if (meio.tamanho() > fundo.tamanho()) {
                     segmentoOrdenado = true;
                 } else {
                     meio = merge(fundo, meio, comp);
                 }
-            } else if (fundoLen >= topoLen) {
+            } else if (fundo.tamanho() >= topo.tamanho()) {
                 meio = merge(meio, topo, comp);
-            } else if (fundoLen < topoLen) {
+            } else if (fundo.tamanho() < topo.tamanho()) {
                 meio = merge(meio, fundo, comp);
             }
         }
@@ -137,12 +159,12 @@ void ajustaSegmentoDeRunsDinamicamente (vector<pair<RegIterator,RegIterator>>& p
 
 void timSort(RegIterator begin, RegIterator end, compRegFunc comp)
 {
-    std::vector<std::pair<RegIterator,RegIterator>> pilhaDeRuns;
+    std::vector<Chunk> pilhaDeRuns;
 
     for (RegIterator lo = begin, ho ; lo < end; lo = ho) { 
         ho = calculaFimRun(lo, end);
         insertionSort(lo, ho, comp); 
         pilhaDeRuns.push_back({lo,ho});
-        ajustaSegmentoDeRunsDinamicamente(pilhaDeRuns, vet, comp);
+        ajustaSegmentoDeRunsDinamicamente(pilhaDeRuns, comp);
     }
 }

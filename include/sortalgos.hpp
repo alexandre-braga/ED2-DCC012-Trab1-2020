@@ -9,6 +9,6 @@ using compRegFunc = int(*)(const Registro&, const Registro&);
 
 void timSort(RegIterator begin, RegIterator end, compRegFunc comp);
 
-void heapSort(vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp); 
+void heapSort(std::vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp); 
 
 #endif /* SORT_ALGOS_HPP */
