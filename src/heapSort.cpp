@@ -15,17 +15,20 @@ static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &
     int r = right(i);
     int m;
 
-    if (l < n && comp(vet[l], vet[i]) > 0) {
-        m = l;
+    if (l < n ) {
         comparacoes++;
-    } else {
-        m = i;
-        comparacoes++;
+        if(comp(vet[l], vet[i]) > 0)
+            m = l;
+        else {
+            m = i;
+            comparacoes++;
+        }
     }
 
-    if (r < n && comp(vet[r], vet[m]) > 0) {
-        m = r;
+    if (r < n ) {
         comparacoes++;
+        if(comp(vet[r], vet[m]) > 0) 
+            m = r;
     }
 
     if (m != i) {
@@ -49,6 +52,7 @@ void heapSort(vector<Registro>& vet, int &comparacoes, int &trocas,
     buildMaxHeap(vet, comparacoes, trocas, comp);
     for (int i = vet.size() - 1; i >= 1; i--) {
         std::swap(vet[0], vet[i]);
+        trocas++;
         maxHeap(vet, 0, i, comparacoes, trocas, comp);
     }
 }
