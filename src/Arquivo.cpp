@@ -33,10 +33,10 @@ void Arquivo::escreverCSV(std::ofstream& file, int arr[], int matrizComp[][N][M]
 {
 	file << "N,algoritmo,comparacoes,trocas,tempo_us\n";
 	for(size_t i = 0; i < N; ++i) {
-		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "HeapSort", HEAPSORT);
+		//Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "HeapSort", HEAPSORT);
+		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "QuickSort", QUICKSORT);
 		/*
 		// escrever outros algoritmos
-		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "HeapSort", HEAPSORT);
 		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "HeapSort", HEAPSORT);
 		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "HeapSort", HEAPSORT);
 		*/
@@ -79,12 +79,12 @@ int stdComp[][N], int stdTrocas[][N], int stdTempos[][N])
 	for(size_t i = 0; i < N; ++i) 
 	{
 		file << std::endl << std::setw(11) << "N = " + std::to_string(arr[i]) << std::endl;
+		//Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
+		//	mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "HeapSort", HEAPSORT);
 		Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
-			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "HeapSort", HEAPSORT);
+			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "QuickSort", QUICKSORT);
 		/*
 		// escrever outros algoritmos
-		Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
-			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "HeapSort", HEAPSORT);
 		Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
 			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "HeapSort", HEAPSORT);
 		Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 

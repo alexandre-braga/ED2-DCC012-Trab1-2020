@@ -149,19 +149,18 @@ int main(int argc, char *argv[])
 		for(size_t i = 0; i < N; ++i) {
 			for(size_t j = 0; j < M; ++j) {
 				vet = nAleatorios(vetRegistros, arr[i]);
-
 				/*
 				begin = std::chrono::steady_clock::now();
 				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
 				matrizTempos[HEAPSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 				*/
-
+				
 				begin = std::chrono::steady_clock::now();
 				quickSort(vet, 0, vet.size()-1, matrizComp[QUICKSORT][i][j], matrizTrocas[QUICKSORT][i][j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
-				//std::cout << arr[i] << ": " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << std::endl;
 				matrizTempos[QUICKSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				
 				/*
 				// Preencher com outros algoritmos
 				begin = std::chrono::steady_clock::now();

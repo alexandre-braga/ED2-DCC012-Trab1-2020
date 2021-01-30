@@ -15,20 +15,23 @@ static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &
     int r = right(i);
     int m;
 
-    if (l < n ) {
+    if (l < n) {
         comparacoes++;
-        if(comp(vet[l], vet[i]) > 0)
+        if(comp(vet[l], vet[i]) > 0) {
             m = l;
+        }
         else {
             m = i;
-            comparacoes++;
         }
+    } else {
+        m = i;
     }
 
     if (r < n ) {
         comparacoes++;
-        if(comp(vet[r], vet[m]) > 0) 
+        if(comp(vet[r], vet[m]) > 0) {
             m = r;
+        }
     }
 
     if (m != i) {
