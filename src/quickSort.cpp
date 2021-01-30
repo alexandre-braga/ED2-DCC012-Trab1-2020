@@ -1,9 +1,10 @@
 #include <iostream>
 #include <vector>
 
-#include "../include/Registro.hpp"
+#include "../include/sortalgos.hpp"
 
-void quickSort(std::vector<Registro>& vet, int iVet, int fVet) {
+void quickSort(std::vector<Registro>& vet, int iVet, int fVet)
+{
     //particionamento do vetor
     if (iVet >= fVet) {
         return;

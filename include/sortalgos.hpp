@@ -11,4 +11,6 @@ void timSort(RegIterator begin, RegIterator end, compRegFunc comp);
 
 void heapSort(std::vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp); 
 
+void quickSort(std::vector<Registro>& vet, int iVet, int fVet);
+
 #endif /* SORT_ALGOS_HPP */

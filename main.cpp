@@ -9,6 +9,7 @@
 
 #define ERR_NENHUM_ARG 1
 #define ERR_FALHA_ARQ  2
+
 #define M 5 // numero de cojuntos
 #define N 5 // numero de registros aleatorios
 
@@ -48,18 +49,20 @@ void lerArquivo(std::ifstream& file, vector<Registro>& vet)
 std::vector<Registro> nAleatorios(vector<Registro>& vet, unsigned int n)
 {
 	int limit;
-	if(n <= vet.size())
+	if (n <= vet.size()) {
 		limit = n;
-	else
+	} else {
 		limit = vet.size();
+	}
 
 	std::random_device rd; // obtain a random number from hardware
     std::mt19937 gen(rd()); // seed the generator
     std::uniform_int_distribution<> distr(0, limit); // define the range
 
 	std::vector<Registro> aleatorios;
-    for(unsigned int i=0; i < n; ++i)
+    for (unsigned int i=0; i < n; ++i) {
 		aleatorios.push_back(vet[distr(gen)]);
+	}
 
 	return aleatorios;
 }
@@ -94,11 +97,12 @@ int main(int argc, char *argv[])
 
 		std::ofstream fout;
 		fout.open("brazil_covid19_cities_processado.csv");
-		if(!fout.fail())
+
+		if (fout.is_open()) {
 			escreverArquivo(vetRegistros, fout);
-		else
+		} else {
 			std::cout << progname << ": falha ao escrever arquivo\n";
-		
+		}
 		fout.close();
 
 		std::vector<Registro> vet;
@@ -114,7 +118,8 @@ int main(int argc, char *argv[])
 		float mediasTempos[M];
 
 		// Ordenacao
-		int arr[] = {10000, 50000, 100000, 500000, 1000000};
+		const int valoresDeN[] = { 10000, 50000, 100000, 500000, 1000000 };
+
 		for(int i = 0; i < M; ++i) {
 			for(int j = 0; j < N; ++j) {
 				std::cout << "N = " << arr[j] << std::endl;
@@ -124,6 +129,7 @@ int main(int argc, char *argv[])
 				begin = std::chrono::steady_clock::now();
 				heapSort(vetRegistros, arrComp[i * N + j], arrTrocas[i * N + j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
+
 				std::cout << arrComp[i * N + j] << "\t" << arrTrocas[i * N + j] << "\t";
 				arrTempos[i * N + j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 				std::cout << arrTempos[i * N + j] << std::endl;
