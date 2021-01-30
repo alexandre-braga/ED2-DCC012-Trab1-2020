@@ -64,7 +64,7 @@ static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
     size_t totalDeElementos = limiteSuperior - inicio;
 
     if (totalDeElementos < 2) {
-        return inicio;
+        return limiteSuperior;
     }
 
     if ((a + 1)->cases() >= a->cases()) {
@@ -79,7 +79,7 @@ static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
     } else {
         while ((a + 1)->cases() <= a->cases()) {
             a++;
-            if( a - inicio >= MAX_RUN || a >= limiteSuperior  ) {
+            if (a - inicio >= MAX_RUN || a >= limiteSuperior) {
                 return fimrun;
             }
             fimrun++;
@@ -143,38 +143,41 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
 /*Faz o merge das Runs atuais em ordem crescente, e mantém a estabilidade */
 static void ajustaSegmentoDeRunsDinamicamente(stack<Chunk>& pilhaDeRuns, compRegFunc comp)
 {
-    if (pilhaDeRuns.size() >= 3) {
-        bool segmentoOrdenado = false;
-		std::cerr << "Entrando no loop infinito\n";
-		while (!segmentoOrdenado && pilhaDeRuns.size() > 2) {
-            //a nomenclatura representa o segmento de 3 atual
-            Chunk topo = std::move(pilhaDeRuns.top());
-			pilhaDeRuns.pop();
-            Chunk meio = std::move(pilhaDeRuns.top());
-			pilhaDeRuns.pop();
-            Chunk fundo = std::move(pilhaDeRuns.top());
-			pilhaDeRuns.pop();
+    std::cerr << "Entrando no loop infinito\n";
+    while (pilhaDeRuns.size() > 2) {
+        //a nomenclatura representa o segmento de 3 atual
+        Chunk topo = std::move(pilhaDeRuns.top());
+        pilhaDeRuns.pop();
+        Chunk meio = std::move(pilhaDeRuns.top());
+        pilhaDeRuns.pop();
+        Chunk fundo = std::move(pilhaDeRuns.top());
+        pilhaDeRuns.pop();
 
-			std::cerr << "Tamanho do fundo: " << fundo.size() << '\n';
-			std::cerr << "Tamanho do meio: " << meio.size() << '\n';
-			std::cerr << "Tamanho do topo: " << topo.size() << '\n';
-            if (fundo.size() > topo.size() + meio.size()) {
-                if (meio.size() > fundo.size()) {
-                    segmentoOrdenado = true;
-                } else {
-                    pilhaDeRuns.push(std::move(merge(fundo, meio, comp)));
-					pilhaDeRuns.push(std::move(topo));
-                }
-            } else if (fundo.size() >= topo.size()) {
-				pilhaDeRuns.push(std::move(fundo));
-                pilhaDeRuns.push(std::move(merge(meio, topo, comp)));
-            } else if (fundo.size() < topo.size()) {
-                pilhaDeRuns.push(std::move(merge(meio, fundo, comp)));
-				pilhaDeRuns.push(std::move(topo));
-            }
+        std::cerr << "Tamanho do fundo: " << fundo.size() << '\n';
+        std::cerr << "Tamanho do meio: " << meio.size() << '\n';
+        std::cerr << "Tamanho do topo: " << topo.size() << '\n';
+        // x > y + z
+        if (fundo.size() > meio.size() + topo.size() && meio.size() > topo.size()) {
+            break;
+        } else if (fundo.size() > meio.size() + topo.size()) {
+            pilhaDeRuns.push(merge(topo, meio, comp));
+			pilhaDeRuns.push(std::move(fundo));
+        } else if (fundo.size() < meio.size() + topo.size()) {
+			Chunk *escolhido;
+			Chunk *descartado;
+
+			if (topo.size() < meio.size()) {
+				escolhido = &topo;
+				descartado = &meio;
+			} else {
+				escolhido = &meio;
+				descartado = &topo;
+			}
+            pilhaDeRuns.push(merge(meio, *escolhido, comp));
+			pilhaDeRuns.push(std::move(*descartado));
         }
-		std::cerr << "Saindo do loop infinito\n";
     }
+    std::cerr << "Saindo do loop infinito\n";
 }
 
 void timSort(RegIterator begin, RegIterator end, compRegFunc comp)
