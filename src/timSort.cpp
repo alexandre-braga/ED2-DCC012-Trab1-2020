@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <stack>
+#include <cassert>
 
 #define MIN_RUN  32
 #define MAX_RUN  64
@@ -63,7 +64,7 @@ static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
     RegIterator a = inicio;
     size_t totalDeElementos = limiteSuperior - inicio;
 
-    if (totalDeElementos < 2) {
+    if (totalDeElementos < MIN_RUN) {
         return limiteSuperior;
     }
 
@@ -107,6 +108,7 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
         leftRun = &run2;
         rightRun = &run1;
     }
+    assert(leftRun->end() == rightRun->begin());
 
 	Chunk resultado(leftRun->begin(), rightRun->end());
 
@@ -137,7 +139,28 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
 		move_iterator<RegIterator>(merged.end()),
 		resultado.begin()
 	);
+    
+    //for(RegIterator it = resultado.begin(); it != resultado.end(); it++){
+    //    cerr << *it << '\n';
+    //}
+    //cerr << "\n\n";
+
 	return resultado;
+}
+
+void mergeFinal(stack<Chunk>& pilhaDeRuns, compRegFunc comp){
+    while(pilhaDeRuns.size() > 1){
+        Chunk a = pilhaDeRuns.top();
+        pilhaDeRuns.pop();
+        Chunk b = pilhaDeRuns.top();
+        pilhaDeRuns.pop();
+        Chunk c = merge(a, b, comp);
+        pilhaDeRuns.push(c);
+        //for(RegIterator it = c.begin(); it != c.end(); it++){
+        //    cerr << *it << '\n';
+        //}
+        //cerr << "\n\n";
+    }
 }
 
 /*Faz o merge das Runs atuais em ordem crescente, e mantém a estabilidade */
@@ -146,35 +169,30 @@ static void ajustaSegmentoDeRunsDinamicamente(stack<Chunk>& pilhaDeRuns, compReg
     std::cerr << "Entrando no loop infinito\n";
     while (pilhaDeRuns.size() > 2) {
         //a nomenclatura representa o segmento de 3 atual
-        Chunk topo = std::move(pilhaDeRuns.top());
+        Chunk z = std::move(pilhaDeRuns.top());
         pilhaDeRuns.pop();
-        Chunk meio = std::move(pilhaDeRuns.top());
+        Chunk y = std::move(pilhaDeRuns.top());
         pilhaDeRuns.pop();
-        Chunk fundo = std::move(pilhaDeRuns.top());
+        Chunk x = std::move(pilhaDeRuns.top());
         pilhaDeRuns.pop();
 
-        std::cerr << "Tamanho do fundo: " << fundo.size() << '\n';
-        std::cerr << "Tamanho do meio: " << meio.size() << '\n';
-        std::cerr << "Tamanho do topo: " << topo.size() << '\n';
-        // x > y + z
-        if (fundo.size() > meio.size() + topo.size() && meio.size() > topo.size()) {
-            break;
-        } else if (fundo.size() > meio.size() + topo.size()) {
-            pilhaDeRuns.push(merge(topo, meio, comp));
-			pilhaDeRuns.push(std::move(fundo));
-        } else if (fundo.size() < meio.size() + topo.size()) {
-			Chunk *escolhido;
-			Chunk *descartado;
-
-			if (topo.size() < meio.size()) {
-				escolhido = &topo;
-				descartado = &meio;
+        std::cerr << "Tamanho do x: " << x.size() << '\n';
+        std::cerr << "Tamanho do y: " << y.size() << '\n';
+        std::cerr << "Tamanho do z: " << z.size() << '\n';
+        // x > y + z   E    y > z
+        if (x.size() > y.size() + z.size() && y.size() > z.size()) {
+            mergeFinal(pilhaDeRuns, comp);
+        } else if (x.size() > y.size() + z.size()) {
+			pilhaDeRuns.push(std::move(x));
+            pilhaDeRuns.push(merge(y, z, comp));
+        } else if (x.size() < y.size() + z.size()) {
+			if (z.size() < x.size()) {
+                pilhaDeRuns.push(std::move(x));
+                pilhaDeRuns.push(merge(y, z, comp));
 			} else {
-				escolhido = &meio;
-				descartado = &topo;
+                pilhaDeRuns.push(merge(x, y, comp));
+                pilhaDeRuns.push(std::move(z));
 			}
-            pilhaDeRuns.push(merge(meio, *escolhido, comp));
-			pilhaDeRuns.push(std::move(*descartado));
         }
     }
     std::cerr << "Saindo do loop infinito\n";
@@ -189,5 +207,7 @@ void timSort(RegIterator begin, RegIterator end, compRegFunc comp)
         insertionSort(lo, ho, comp); 
         pilhaDeRuns.push({lo,ho});
         ajustaSegmentoDeRunsDinamicamente(pilhaDeRuns, comp);
+        mergeFinal(pilhaDeRuns, comp);
     }
+
 }
