@@ -5,7 +5,6 @@
 #include <chrono>
 
 #include "./include/Registro.hpp"
-#include "./include/Arquivo.hpp"
 #include "./include/HeapSort.hpp"
 
 #define ERR_NENHUM_ARG 1
@@ -13,29 +12,42 @@
 #define M 5 // numero de cojuntos
 #define N 5 // numero de registros aleatorios
 
-#define N_ALGORITMOS 4 // numero de algoritmos de ordenacao
-#define HEAPSORT  0
-#define QUICKSORT 1
-#define MERGESORT 2
-#define TIMSORT   3
-
-void calculaTotalDiarios(std::vector<Registro>& vet)
+void calculaTotalDiarios(vector<Registro>& vet)
 {
 	std::vector<Registro>::reverse_iterator it = vet.rbegin();
 	std::vector<Registro>::reverse_iterator next;
 
 	while ((next = it + 1) != vet.rend()) {
 		if (it->code() == next->code()) {
-			it->setCases(it->cases() - next->cases());
-			it->setDeaths(it->deaths() - next->deaths());
+			int c = it->cases() - next->cases();
+			int d = it->deaths() - next->deaths();
 		}
 		it = next;
 	}
 }
 
-std::vector<Registro> nAleatorios(std::vector<Registro>& vet, size_t n)
+void escreverArquivo(vector<Registro>& vet, ofstream& file)
 {
-	size_t limit;
+	file << "date,state,name,code,cases,deaths" << std::endl;
+	for (const auto& r : vet) {
+		file << r << '\n';
+	}
+}
+
+void lerArquivo(std::ifstream& file, vector<Registro>& vet) 
+{
+	// Ignorar header
+	file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+	Registro r;
+	while (file >> r) {
+		vet.push_back(r);
+	}
+}
+
+std::vector<Registro> nAleatorios(vector<Registro>& vet, unsigned int n)
+{
+	int limit;
 	if(n <= vet.size())
 		limit = n;
 	else
@@ -46,68 +58,32 @@ std::vector<Registro> nAleatorios(std::vector<Registro>& vet, size_t n)
     std::uniform_int_distribution<> distr(0, limit); // define the range
 
 	std::vector<Registro> aleatorios;
-    for(size_t i = 0; i < n; ++i)
+    for(unsigned int i=0; i < n; ++i)
 		aleatorios.push_back(vet[distr(gen)]);
 
 	return aleatorios;
-}
-
-
-float calculaMedia(float vet[], size_t n)
-{
-	float soma = 0.0;
-	for(size_t i = 0; i < n; ++i)
-		soma += vet[i];
-	return soma / n;
-}
-
-float calculaMedia(int vet[], size_t n)
-{
-	float soma = 0.0;
-	for(size_t i = 0; i < n; ++i)
-		soma += vet[i];
-	return soma / n;
-}
-
-float calculaVariancia(float vet[], size_t n, float media)
-{
-	float variancia = 0.0;
-	for(size_t i = 0; i < n; ++i)
-		variancia += pow(vet[i] - media, 2);
-	return variancia / n;
-}
-
-float calculaVariancia(int vet[], size_t n, float media)
-{
-	float variancia = 0.0;
-	for(size_t i = 0; i < n; ++i) 
-		variancia += pow(vet[i] - media, 2);
-	return variancia / n;
 }
 
 int main(int argc, char *argv[])
 {
 	const char *progname = *argv;
 
-	if (argc < 2) 
-	{
+	if (argc < 2) {
 		std::cerr << progname << ": nenhum arquivo fornecido\n";
 		exit(ERR_NENHUM_ARG);
 	}
 
-	while (--argc) 
-	{	
+	while (--argc) {
 		std::ifstream fin;
 		fin.open(*++argv);
 
-		if (!fin.is_open()) 
-		{
+		if (!fin.is_open()) {
 			std::cerr << progname << ": falha ao abrir o arquivo `" << *argv << "`\n";
 			exit(ERR_FALHA_ARQ);
 		}
 
 		std::vector<Registro> vetRegistros;
-		Arquivo::lerRegistros(fin, vetRegistros);
+		lerArquivo(fin, vetRegistros);
 		fin.close();
 
 		// Pre-processamento
@@ -119,94 +95,74 @@ int main(int argc, char *argv[])
 		std::ofstream fout;
 		fout.open("brazil_covid19_cities_processado.csv");
 		if(!fout.fail())
-			Arquivo::escreverRegistros(vetRegistros, fout);
+			escreverArquivo(vetRegistros, fout);
 		else
-			std::cout << progname << ": falha ao escrever arquivo `brazil_covid19_cities_processado.csv`\n";
+			std::cout << progname << ": falha ao escrever arquivo\n";
 		
 		fout.close();
 
 		std::vector<Registro> vet;
-
-		// matrizes 3d de valores
-		int matrizComp[N_ALGORITMOS][N][M] = {};
-		int matrizTrocas[N_ALGORITMOS][N][M] = {};
+		int arrComp[M * N] = {0};
+		int arrTrocas[M * N] = {0};
 		
 		std::chrono::steady_clock::time_point begin;
 		std::chrono::steady_clock::time_point end;
-		int matrizTempos[N_ALGORITMOS][N][M] = {};
+		int arrTempos[M * N];
 
-		// matrizes 2d de médias
-		int mediasComp[N_ALGORITMOS][N] = {};
-		int stdComp[N_ALGORITMOS][N] = {};
-		int mediasTrocas[N_ALGORITMOS][N] = {};
-		int stdTrocas[N_ALGORITMOS][N] = {};
-		int mediasTempos[N_ALGORITMOS][N] = {};
-		int stdTempos[N_ALGORITMOS][N] = {};
+		int mediasComp[M];
+		int mediasTrocas[M];
+		float mediasTempos[M];
 
 		// Ordenacao
 		int arr[] = {10000, 50000, 100000, 500000, 1000000};
-		for(size_t i = 0; i < N; ++i) {
-			for(size_t j = 0; j < M; ++j) {
-				vet = nAleatorios(vetRegistros, arr[i]);
+		for(int i = 0; i < M; ++i) {
+			for(int j = 0; j < N; ++j) {
+				std::cout << "N = " << arr[j] << std::endl;
+				std::cout << "Comparacoes\tTrocas\tTempo [µs]\n";
+				vet = nAleatorios(vetRegistros, arr[j]);
 
 				begin = std::chrono::steady_clock::now();
-				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
+				heapSort(vetRegistros, arrComp[i * N + j], arrTrocas[i * N + j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
-				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				std::cout << arrComp[i * N + j] << "\t" << arrTrocas[i * N + j] << "\t";
+				arrTempos[i * N + j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				std::cout << arrTempos[i * N + j] << std::endl;
 
 				/*
-				// Preencher com outros algoritmos
 				begin = std::chrono::steady_clock::now();
-				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
+				quickSort(vetRegistros, arrComp[i * N + j], arrTrocas[i * N + j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
-				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-				
+				std::cout << arrComp[i * N + j] << "\t" << arrTrocas[i * N + j] << "\t";
+				arrTempos[i * N + j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				std::cout << arrTempos[i * N + j] << std::endl;
+				*/
+
+				/*			
 				begin = std::chrono::steady_clock::now();
-				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
+				timSort(vetRegistros, arrComp[i * N + j], arrTrocas[i * N + j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
-				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-				
-				begin = std::chrono::steady_clock::now();
-				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
-				end = std::chrono::steady_clock::now();
-				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				std::cout << arrComp[i * N + j] << "\t" << arrTrocas[i * N + j] << "\t";
+				arrTempos[i * N + j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				std::cout << arrTempos[i * N + j] << std::endl;
 				*/
 			}
 
-			// Calcular medias e desvio padrao para cada algoritmo
-			for(size_t codigo = 0; codigo < N_ALGORITMOS; ++codigo)
-			{
-				// Media de comparacoes
-				// Passa para a função um vetor 1d pertencente à matriz 3d de valores
-				// Guarda a média do vetor em uma posição na matriz 2d de médias
-				mediasComp[codigo][i] = calculaMedia(matrizComp[codigo][i], M);
-				stdComp[codigo][i] = pow(calculaVariancia(matrizComp[codigo][i], M, mediasComp[codigo][i]), 0.5);
-				// Media de trocas
-				mediasTrocas[codigo][i] = calculaMedia(matrizTrocas[codigo][i], M);
-				stdTrocas[codigo][i] = pow(calculaVariancia(matrizTrocas[codigo][i], M, mediasTrocas[codigo][i]), 0.5);
-				// Media do tempo
-				mediasTempos[codigo][i] = calculaMedia(matrizTempos[codigo][i], M);
-				stdTempos[codigo][i] = pow(calculaVariancia(matrizTempos[codigo][i], M, mediasTempos[codigo][i]), 0.5);
-			}
+			// Precisa passar os ponteiros pro primeiro e ultimo elementos do vetor nessa
+			// Mas nao to fazendo certo pq tá retornando uns numeros absurdos
+			// Vai pegar arr[i * N] ate arr[i * N + N - 1] pq precisa da media de M
+			// Exemplo: M = 0 vai pegar de 0 ate N - 1; M = 1 vai pegar de N ate 2N + 1
+			// Media de comparacoes
+			mediasComp[i] = std::accumulate(&arrComp[i * N], &arrComp[i * N + N - 1], 0) / N;
+			// Media de trocas
+			mediasTrocas[i] = std::accumulate(&arrTrocas[i * N], &arrTrocas[i * N + N - 1], 0) / N;
+			// Media do tempo
+			mediasTempos[i] = std::accumulate(&arrTempos[i * N], &arrTempos[i * N + N - 1], 0) / N;
+			std::cout << std::endl;
+			std::cout << "Media de comparacoes: " << mediasComp[i] << std::endl;
+			std::cout << "Media de trocas: " << mediasTrocas[i] << std::endl;
+			std::cout << "Tempo medio [µs]: " << mediasTempos[i] << std::endl;
+			std::cout << std::endl;
 		}
-
-		std::ofstream relatorio;
-		relatorio.open("saida.txt");
-		if(!relatorio.fail())
-			Arquivo::escreverTXT(relatorio, arr, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
-			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos);
-		else
-			std::cout << progname << ": falha ao escrever arquivo `saida.txt`\n";
-		relatorio.close();
-
-		// Salvar resultados para leitura com Pandas (Python)
-		relatorio.open("saida.csv");
-		if(!relatorio.fail())
-			Arquivo::escreverCSV(relatorio, arr, matrizComp, matrizTrocas, matrizTempos);
-		else
-			std::cout << progname << ": falha ao escrever arquivo `saida.csv`\n";
-		relatorio.close();
-		
 	}
 
 	return 0;

@@ -1,0 +1,49 @@
+Criado por Tim Peters
+Pegando dados grandes e dividindo em menores e usando insert em menores
+Pois um insertion sort para poucos dados a serem ordenados é bem mais rápido q um algoritmo de n log n
+Empiricamente pedaços entre 32 e 64
+A COMBINAÇÃO DE UM N LOG N COM ISERTION
+com "chunks" de 64 da pra evitar uns 5 niveis no merge
+quebrar em sequencias de crescente e descrescente limitando com o 64
+run = chunks de elementos crescentes e ordenados
+pilha de runs
+merge de runs adjacentes pra manter a estabilidade
+Sempre devem ser mantidas:
+run (n) > run(n-1)+run(n-2)
+run (n-1) > run (n-2)
+
+Mantém a runs em tamanho crescente enquanto desce a pilha:
+enquanto (o tamanho das runs >=2){
+    se(run(n) > run(n-1)+run(n-2){
+        se(run (n-2) > run (n-1))
+           merge( run (n-2), run (n-1) )
+        se nao
+           break
+    })
+    se nao{
+        merge( run (n-1), menor entre(run(n-2), run(n)) )
+    }
+}
+
+Organiza as RUNS:
+um for (com i no inicio do vetor; i menor que o tamanho do vetor; e tendo como passo uma RUN) 
+        insertionSort(array, começando em i, e indo até o menor entre min((i+31),(n-1))); 
+        OU
+        array[i até i+RUN] = insertionSort(array[i até i+RUN])
+
+Pro MERGE:
+
+RUNAux = RUN
+while RUNAux < tamArray
+    um for (com i no inicio do vetor; i menor que o tamanho do vetor; e tendo como passo duas RUN) 
+        array[i até i+RUNAux] = Merge(array[i até i+RUNAux], array[i+RUN até i+2*RUNAux] )
+    RUNAux = 2*RUNAux
+
+
+fonte:
+Explicação Part 1: https://www.youtube.com/watch?v=emeME__917E
+Explicação Part 2: https://www.youtube.com/watch?v=6DOhQyqAAvU
+Explicação Part 3: https://www.youtube.com/watch?v=Yk4CBisILaw
+Explicação Part 4: https://www.youtube.com/watch?v=o8y9uYygLcw
+Explicação do gallop: https://www.wikiwand.com/en/Timsort
+Ex de Implementação do Código: https://www.geeksforgeeks.org/timsort/
