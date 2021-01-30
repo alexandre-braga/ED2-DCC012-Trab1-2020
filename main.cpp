@@ -4,9 +4,8 @@
 #include <random>
 #include <chrono>
 
-#include "./include/Registro.hpp"
 #include "./include/Arquivo.hpp"
-#include "./include/HeapSort.hpp"
+#include "./include/sortalgos.hpp"
 
 #define ERR_NENHUM_ARG 1
 #define ERR_FALHA_ARQ  2
@@ -118,10 +117,12 @@ int main(int argc, char *argv[])
 
 		std::ofstream fout;
 		fout.open("brazil_covid19_cities_processado.csv");
-		if(!fout.fail())
+		if (fout.is_open()) {
 			Arquivo::escreverRegistros(vetRegistros, fout);
-		else
+		}
+		else {
 			std::cout << progname << ": falha ao escrever arquivo `brazil_covid19_cities_processado.csv`\n";
+		}
 		
 		fout.close();
 

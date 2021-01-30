@@ -5,6 +5,8 @@
 #include <fstream>
 #include <vector>
 
+#include "./Registro.hpp"
+
 #define M 5 // numero de cojuntos
 #define N 5 // numero de registros aleatorios
 
