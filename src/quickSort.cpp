@@ -4,6 +4,19 @@
 #include "../include/sortalgos.hpp"
 
 /*
+int indicePivo(std::vector<Registro>& vet) {
+    int iVet = 0;
+    int fVet = vet.size() - 1;
+    int mVet = (iVet + fVet)/2;
+    if (vet[iVet].cases() < vet[mVet].cases()) {
+        if (vet[iVet].cases() < vet[fVet].cases())
+            return iVet;
+    } else if (vet[mVet].cases() < vet[fVet].cases()) {
+        return mVet;
+    } return fVet;
+}
+*/
+/*
 // Algoritmo 1
 void quickSort(std::vector<Registro>& vet, int iVet, int fVet, 
 int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&))
@@ -12,21 +25,22 @@ int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&))
     if (iVet >= fVet) {
         return;
     }
-
-    std::swap(vet[iVet], vet[((iVet + fVet)/2)]);
-    trocas++;
+    
+    std::swap(vet[iVet], vet[indicePivo(vet)]);
+//    trocas++;
 
     int ultimo = iVet;
     for (int i = iVet + 1; i <= fVet; ++i) {
-        if(comp(vet[i], vet[iVet]) < 0) {
+        if(vet[i].cases() < vet[iVet].cases()) {
             std::swap(vet[i], vet[++ultimo]);
-            trocas++;
+//            trocas++;
         }
-        comparacoes++;
+//        comparacoes++;
     }
+//    comparacoes++;
 
     std::swap(vet[iVet], vet[ultimo]);
-    trocas++;
+//    trocas++;
 
     //chamadas recursivas
     quickSort(vet, iVet, ultimo - 1, comparacoes, trocas, comp);
@@ -79,23 +93,26 @@ int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&)) {
     while (i <= j) {
         comparacoes++;
         if (vet[i].cases() < pivo) {
+            comparacoes++;
             std::swap(vet[i], vet[k]);
             trocas++;
             k++;
             i++;
         } else if (vet[i].cases() > pivo) {
+            comparacoes++;
             while (vet[j].cases() >= vet[i].cases()) {
-                j--;
                 comparacoes++;
+                j--;
             }
+            comparacoes++;
             std::swap(vet[i], vet[j]);
             trocas++;
             j--;
         } else {
-            comparacoes++;
             i++;
         }
     }
+    comparacoes++;
 
     //chamadas recursivas
     quickSort(vet, iVet, k - 1, comparacoes, trocas, comp);
