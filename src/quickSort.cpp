@@ -81,8 +81,8 @@ int &comparacoes, int &trocas, compRegFunc comp) {
 */
 
 // Algoritmo 3
-void quickSort(std::vector<Registro>& vet, int iVet, int fVet, 
-int &comparacoes, int &trocas, compRegFunc comp) {
+void quickSort(std::vector<Registro>& vet, int iVet, int fVet, int &comparacoes, int &trocas, compRegFunc comp)
+{
     if (fVet - iVet < 0)
         return;
     //particionamento do vetor
