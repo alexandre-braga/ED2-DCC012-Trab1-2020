@@ -53,7 +53,7 @@ static int _trocas;
 RegIterator findInsertionPos(RegIterator begin, RegIterator end, const Registro& val, compRegFunc comp)
 {
 	RegIterator it;
-	auto count = distance(begin, end);
+	auto count = distance(end, begin);
 
 	while (count > 0) {
 		auto step = count / 2;
