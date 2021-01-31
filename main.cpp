@@ -83,11 +83,12 @@ int main(int argc, char *argv[])
 		for(size_t i = 0; i < N; ++i) {
 			for(size_t j = 0; j < M; ++j) {
 				// Obter N elementos aleatorios -> Registro::nAleatorios(vetRegistros, N=10k..50k..100k..etc..);
-				if(i >= 3){break;}
+				
 				std::vector<Registro> vetControle = Registro::nAleatorios(vetRegistros, arr[i]);
 				
 				// Criar copia a ser ordenada
 				std::vector<Registro> vet = vetControle;
+				
 				begin = std::chrono::steady_clock::now();
 				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
@@ -99,13 +100,15 @@ int main(int argc, char *argv[])
 				quickSort(vet, 0, vet.size()-1, matrizComp[QUICKSORT][i][j], matrizTrocas[QUICKSORT][i][j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
 				matrizTempos[QUICKSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-
-				// Preencher com outros algoritmos
-				vet = vetControle;
-				begin = std::chrono::steady_clock::now();
-				timSort(vet.begin(), vet.end(), matrizComp[TIMSORT][i][j], matrizTrocas[TIMSORT][i][j], Registro::comparaCasos);
-				end = std::chrono::steady_clock::now();
-				matrizTempos[TIMSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				
+				if(i < 3){
+					//Tim Sort para apenas 100k
+					vet = vetControle;
+					begin = std::chrono::steady_clock::now();
+					timSort(vet.begin(), vet.end(), matrizComp[TIMSORT][i][j], matrizTrocas[TIMSORT][i][j], Registro::comparaCasos);
+					end = std::chrono::steady_clock::now();
+					matrizTempos[TIMSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				}
 				
 				/*
 				vet = vetControle;
