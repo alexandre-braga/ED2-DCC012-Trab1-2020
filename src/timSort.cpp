@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <stack>
-#include <cassert>
+#include <chrono>
 
 #define MIN_RUN  32
 #define MAX_RUN  64
@@ -158,44 +158,63 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
         leftRun = &run2;
         rightRun = &run1;
     }
-    //assert(leftRun->end() == rightRun->begin());
 
 	Chunk resultado(leftRun->begin(), rightRun->end());
 
-	std::vector<Registro> merged;
+    // Um vetor temporário é criado com o tamanho do menor dos dois Runs que são combinados.
+    // Copia-se o Run mais curto para o vetor temporário.
+	std::vector<Registro> tempArea;
+    if (rightRun->size() < leftRun->size()) {
+        for (auto& reg : *rightRun) {
+            tempArea.push_back(std::move(reg));
+        }
+        // Caso o Run da direita seja menor, a comparação é feita marcando o endereço base do Run da esquerda e do Run temporário na última posição válida e ambos os vetores são percorridos da direita para a esquerda, sempre buscando o maior elemento em vez do menor.
 
-	auto lrunit = leftRun->begin();
-	auto rrunit = rightRun->begin();
-	while (lrunit != leftRun->end() && rrunit != rightRun->end()) {
-		_comparacoes++;
-        merged.push_back(std::move(
-			(comp(*rrunit, *lrunit) < 0) ? (*rrunit++) : (*lrunit++)
-		));
-	}
+        auto writeIt = resultado.rbegin();
+        auto tempIt = tempArea.rbegin();
+        auto rightIt = rightRun->rbegin();
 
-	while (lrunit != leftRun->end()) {
-		merged.push_back(std::move(
-			*lrunit++
-		));
-	}
+        while (tempIt != tempArea.rend() && rightIt != rightRun->rend()) {
+            *writeIt++ = std::move(
+                (comp(*tempIt, *rightIt) > 0) ? *tempIt++ : *rightIt++
+            );
+        }
 
-	while (rrunit != rightRun->end()) {
-		merged.push_back(std::move(
-			*rrunit++
-		));
-	}
+        while (tempIt != tempArea.rend()) {
+            ++_comparacoes;
+            ++_trocas;
+            *writeIt++ = *tempIt++;
+        }
+        while (rightIt != rightRun->rend()) {
+            ++_comparacoes;
+            ++_trocas;
+            *writeIt++ = *rightIt++;
+        }
+    } else {
+        for (auto& reg : *leftRun) {
+            tempArea.push_back(std::move(reg));
+        }
 
-	std::copy(
-		move_iterator<RegIterator>(merged.begin()),
-		move_iterator<RegIterator>(merged.end()),
-		resultado.begin()
-	);
-    
-    //for(RegIterator it = resultado.begin(); it != resultado.end(); it++){
-    //    cerr << *it << '\n';
-    //}
-    //cerr << "\n\n";
-    _trocas += resultado.size() * 2;
+        auto writeIt = resultado.begin();
+        auto tempIt = tempArea.begin();
+        auto leftIt = leftRun->begin();
+
+        while (tempIt != tempArea.end() && leftIt != leftRun->end()) {
+            ++_comparacoes;
+            ++_trocas;
+            *writeIt++ = std::move(
+                (comp(*tempIt, *leftIt) < 0) ? *tempIt++ : *leftIt++
+            );
+        }
+        while (tempIt != tempArea.end()) {
+            ++_trocas;
+            *writeIt++ = *tempIt++;
+        }
+        while (leftIt != leftRun->end()) {
+            ++_trocas;
+            *writeIt++ = *leftIt++;
+        }
+    }
 	return resultado;
 }
 
@@ -255,6 +274,7 @@ void timSort(RegIterator begin, RegIterator end, int &comparacoes, int &trocas, 
 {
     stack<Chunk> pilhaDeRuns;
     _comparacoes = _trocas = 0;
+
     for (RegIterator lo = begin, ho ; lo < end; lo = ho) { 
         ho = calculaFimRun(lo, end, comp);
         pilhaDeRuns.push({lo,ho});
