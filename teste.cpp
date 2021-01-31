@@ -73,6 +73,7 @@ int main()
         std::ofstream file;
         vetControle = Registro::nAleatorios(vetRegistros, 100);
 
+        //HeapSort
         std::vector<Registro> vet = vetControle;
         heapSort(vet, comparacoes, trocas, Registro::comparaCasos);
         file.open("heapSort.csv");
@@ -84,6 +85,7 @@ int main()
             std::cout << "Falha ao escrever arquivo `heapSort.csv`\n";
 		file.close();
         
+        //QuickSort
         vet = vetControle;
         quickSort(vet, 0, vet.size()-1, comparacoes, trocas, Registro::comparaCasos);
         file.open("quickSort.csv");
@@ -94,19 +96,38 @@ int main()
         else
             std::cout << "Falha ao escrever arquivo `quickSort.csv`\n";
 		file.close();
-        
+
+        //TimSort
+        vet = vetControle;
+        timSort(vet.begin(), vet.end(), comparacoes, trocas, Registro::comparaCasos);
+        file.open("timSort.csv");
+        if(!file.fail()) {
+            Arquivo::escreverRegistros(vet, file);
+            std::cout << "Registros salvos em `timSort.csv`\n";
+        }
+        else
+            std::cout << "Falha ao escrever arquivo `timSort.csv`\n";
+		file.close();
     }
     else {
         vetControle = Registro::nAleatorios(vetRegistros, 10);
 
+        //HeapSort
         std::vector<Registro> vet = vetControle;
         heapSort(vet, comparacoes, trocas, Registro::comparaCasos);
         std::cout << std::endl << std::setw(48) << std::right << "HEAPSORT" << std::endl;
         exibirRegistros(vet, vet.size());
         
+        //QuickSort
         vet = vetControle;
         quickSort(vet, 0, vet.size()-1, comparacoes, trocas, Registro::comparaCasos);
         std::cout << std::endl << std::setw(48) << std::right << "QUICKSORT" << std::endl;
+        exibirRegistros(vet, vet.size());
+
+        //TimSort
+        vet = vetControle;
+        timSort(vet.begin(), vet.end(), comparacoes, trocas, Registro::comparaCasos);
+        std::cout << std::endl << std::setw(48) << std::right << "TIMSORT" << std::endl;
         exibirRegistros(vet, vet.size());
     }
 		

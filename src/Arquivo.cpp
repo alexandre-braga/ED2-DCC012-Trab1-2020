@@ -35,9 +35,9 @@ void Arquivo::escreverCSV(std::ofstream& file, int arr[], int matrizComp[][N][M]
 	for(size_t i = 0; i < N; ++i) {
 		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "HeapSort", HEAPSORT);
 		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "QuickSort", QUICKSORT);
+		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "TimSort", TIMSORT);
 		/*
 		// escrever outros algoritmos
-		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "HeapSort", HEAPSORT);
 		Arquivo::escreverCSVPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, i, arr[i], "HeapSort", HEAPSORT);
 		*/
 	}
@@ -83,10 +83,10 @@ int stdComp[][N], int stdTrocas[][N], int stdTempos[][N])
 			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "HeapSort", HEAPSORT);
 		Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
 			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "QuickSort", QUICKSORT);
+		Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
+			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "TimSort", TIMSORT);
 		/*
 		// escrever outros algoritmos
-		Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
-			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "HeapSort", HEAPSORT);
 		Arquivo::escreverTXTPorAlgoritmo(file, matrizComp, matrizTrocas, matrizTempos, mediasComp, 
 			mediasTrocas, mediasTempos, stdComp, stdTrocas, stdTempos, i, "HeapSort", HEAPSORT);
 		*/

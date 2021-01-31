@@ -137,8 +137,7 @@ int main(int argc, char *argv[])
 				end = std::chrono::steady_clock::now();
 				matrizTempos[HEAPSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 				
-				
-				
+				/*
 				//cria arquivo com heap ordenados TIRAR DEPOIS HEIN
 				std::ofstream teste1;
 				teste1.open("apos_heap.txt");
@@ -146,6 +145,7 @@ int main(int argc, char *argv[])
 					teste1 << vet[k].date() << " " << vet[k].code() << " " << vet[k].cases() << '\n';
 				}
 				teste1.close();
+				*/
 
 				// Recuperar ordem inicial dos elementos
 				vet = vetControle;
@@ -154,8 +154,7 @@ int main(int argc, char *argv[])
 				end = std::chrono::steady_clock::now();
 				matrizTempos[QUICKSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 				
-				
-				
+				/*
 				//quicksort ordenado TIRAR DEPOIS HEIN 
 				std::ofstream teste2;
 				teste2.open("apos_quick.txt");
@@ -163,14 +162,27 @@ int main(int argc, char *argv[])
 					teste2 << vet[k].date() << " " << vet[k].code() << " " << vet[k].cases() << '\n';
 				}
 				teste2.close();
-				/*
+				*/
+
 				// Preencher com outros algoritmos
 				vet = vetControle;
 				begin = std::chrono::steady_clock::now();
-				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
+				timSort(vet.begin(), vet.end(), matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
-				matrizTempos[0][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+				matrizTempos[TIMSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 				
+				if (i == 3) { 
+
+				//timsort ordenado TIRAR DEPOIS HEIN
+				std::ofstream teste3;
+				teste3.open("apos_tim.txt");
+				for (int k = 0; k < arr[i]; k++) {
+					teste3 << vet[k].date() << " " << vet[k].code() << " " << vet[k].cases() << '\n';
+				}
+				teste3.close();
+				}
+				
+				/*
 				vet = vetControle;
 				begin = std::chrono::steady_clock::now();
 				heapSort(vet, matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);

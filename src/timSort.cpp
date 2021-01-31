@@ -177,7 +177,7 @@ void mergeFinal(stack<Chunk>& pilhaDeRuns, compRegFunc comp){
 /*Faz o merge das Runs atuais em ordem crescente, e mantém a estabilidade */
 static void ajustaSegmentoDeRunsDinamicamente(stack<Chunk>& pilhaDeRuns, compRegFunc comp)
 {
-    std::cerr << "Entrando no loop infinito\n";
+    //std::cerr << "Entrando no loop infinito\n";
     while (pilhaDeRuns.size() > 2) {
         //a nomenclatura representa o segmento de 3 atual
         Chunk z = std::move(pilhaDeRuns.top());
@@ -208,7 +208,7 @@ static void ajustaSegmentoDeRunsDinamicamente(stack<Chunk>& pilhaDeRuns, compReg
 			}
         }
     }
-    std::cerr << "Saindo do loop infinito\n";
+    //std::cerr << "Saindo do loop infinito\n";
 }
 
 void timSort(RegIterator begin, RegIterator end, int &comparacoes, int &trocas, compRegFunc comp)
@@ -221,7 +221,7 @@ void timSort(RegIterator begin, RegIterator end, int &comparacoes, int &trocas, 
         pilhaDeRuns.push({lo,ho});
         ajustaSegmentoDeRunsDinamicamente(pilhaDeRuns, comp);
         mergeFinal(pilhaDeRuns, comp);
+        comparacoes = _comparacoes;
+        trocas = _trocas;
     }
-    comparacoes = _comparacoes;
-    trocas = _trocas;
 }
