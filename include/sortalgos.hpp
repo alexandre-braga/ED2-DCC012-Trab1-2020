@@ -7,7 +7,7 @@
 using RegIterator = std::vector<Registro>::iterator; 
 using compRegFunc = int(*)(const Registro&, const Registro&);
 
-void timSort(RegIterator begin, RegIterator end, compRegFunc comp);
+void timSort(RegIterator begin, RegIterator end, int &comparacoes, int &trocas, compRegFunc comp);
 
 void heapSort(std::vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp); 
 

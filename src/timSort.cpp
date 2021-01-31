@@ -47,13 +47,19 @@ public:
     }
 };
 
+static int _comparacoes;
+static int _trocas;
+
 /*Insertion Sort: */
 static void insertionSort(RegIterator inicio, RegIterator fim, compRegFunc comp)    
 { 
     for (RegIterator i = inicio + 1; i < fim; i++) {
         for (RegIterator j = i; j > inicio && comp(*j, *(j-1)) < 0; j--) {
+            _comparacoes++;
             std::swap(*j, *(j-1));
+            _trocas++;
         }
+        _comparacoes++;
     }
 } 
 
@@ -67,9 +73,10 @@ static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
     if (totalDeElementos < MIN_RUN) {
         return limiteSuperior;
     }
-
+    _comparacoes++;
     if ((a + 1)->cases() >= a->cases()) {
         while ((a + 1)->cases() >= a->cases()) {
+            _comparacoes++;
             a++;
             /*se o tamanho atual n é maior q o max da run 64*/
             if (a - inicio >= MAX_RUN || a >= limiteSuperior) {
@@ -77,8 +84,11 @@ static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
             }
             fimrun++;
         }
+        _comparacoes++;
     } else {
+        _comparacoes++;
         while ((a + 1)->cases() <= a->cases()) {
+            _comparacoes++;
             a++;
             if (a - inicio >= MAX_RUN || a >= limiteSuperior) {
                 return fimrun;
@@ -108,7 +118,7 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
         leftRun = &run2;
         rightRun = &run1;
     }
-    assert(leftRun->end() == rightRun->begin());
+    //assert(leftRun->end() == rightRun->begin());
 
 	Chunk resultado(leftRun->begin(), rightRun->end());
 
@@ -117,7 +127,8 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
 	auto lrunit = leftRun->begin();
 	auto rrunit = rightRun->begin();
 	while (lrunit != leftRun->end() && rrunit != rightRun->end()) {
-		merged.push_back(std::move(
+		_comparacoes++;
+        merged.push_back(std::move(
 			(comp(*rrunit, *lrunit) < 0) ? (*rrunit++) : (*lrunit++)
 		));
 	}
@@ -144,7 +155,7 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
     //    cerr << *it << '\n';
     //}
     //cerr << "\n\n";
-
+    _trocas += resultado.size() * 2;
 	return resultado;
 }
 
@@ -176,9 +187,11 @@ static void ajustaSegmentoDeRunsDinamicamente(stack<Chunk>& pilhaDeRuns, compReg
         Chunk x = std::move(pilhaDeRuns.top());
         pilhaDeRuns.pop();
 
+        /*
         std::cerr << "Tamanho do x: " << x.size() << '\n';
         std::cerr << "Tamanho do y: " << y.size() << '\n';
         std::cerr << "Tamanho do z: " << z.size() << '\n';
+        */
         // x > y + z   E    y > z
         if (x.size() > y.size() + z.size() && y.size() > z.size()) {
             mergeFinal(pilhaDeRuns, comp);
@@ -198,10 +211,10 @@ static void ajustaSegmentoDeRunsDinamicamente(stack<Chunk>& pilhaDeRuns, compReg
     std::cerr << "Saindo do loop infinito\n";
 }
 
-void timSort(RegIterator begin, RegIterator end, compRegFunc comp)
+void timSort(RegIterator begin, RegIterator end, int &comparacoes, int &trocas, compRegFunc comp)
 {
     stack<Chunk> pilhaDeRuns;
-
+    _comparacoes = _trocas = 0;
     for (RegIterator lo = begin, ho ; lo < end; lo = ho) { 
         ho = calculaFimRun(lo, end);
         insertionSort(lo, ho, comp); 
@@ -209,5 +222,6 @@ void timSort(RegIterator begin, RegIterator end, compRegFunc comp)
         ajustaSegmentoDeRunsDinamicamente(pilhaDeRuns, comp);
         mergeFinal(pilhaDeRuns, comp);
     }
-
+    comparacoes = _comparacoes;
+    trocas = _trocas;
 }
