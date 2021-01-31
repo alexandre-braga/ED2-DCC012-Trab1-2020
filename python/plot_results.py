@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 df = pd.read_csv('../saida.csv')
 print(df.head())
 
-melt = pd.melt(df, id_vars=['N','algoritmo'], value_vars=['comparacoes','trocas','tempo_us'])
+melt = pd.melt(df, id_vars=['N','algoritmo'], value_vars=['comparacoes','trocas','tempo_µs'])
 g = sns.catplot(kind='point', data=melt, x='N', y='value', hue='algoritmo', col='variable', ci='sd', sharey=False)
 plt.subplots_adjust(top=0.85)
 g.fig.suptitle('Desempenho por algoritmo de ordenação')

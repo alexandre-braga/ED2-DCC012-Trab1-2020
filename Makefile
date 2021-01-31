@@ -6,3 +6,6 @@ build: main
 
 main: ./src/*.cpp main.cpp
 	$(CC) $(CC_FLAGS) -o $@ $^
+
+teste: ./src/*.cpp teste.cpp
+	$(CC) $(CC_FLAGS) -o $@ $^

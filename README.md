@@ -7,11 +7,15 @@ Integrantes:
 - Marcelo Ian Rezende Menezes
 - Igor Correa Rodrigues
 
-Algoritmos a serem usados:
-Heap Sort
-Quick Sort
-?
-
-Após todos estarem com o ambiente configurado:
-Divisão de Tarefas:
+## Instruções para compilação e execução
+### Main
+```
+make main
+./main brazil_covid19_cities.csv
+```
+### Módulo de testes
+```
+make teste
+./teste
+```
 

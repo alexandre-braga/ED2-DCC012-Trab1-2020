@@ -4,6 +4,8 @@
 #include <string>
 #include <ostream>
 #include <istream>
+#include <vector>
+#include <random>
 
 class Registro
 {
@@ -32,6 +34,7 @@ class Registro
 	
   		std::ostream& print(std::ostream& os) const;
   		std::istream& read(std::istream& is);
+		//static std::vector<Registro> nAleatorios(std::vector<Registro>& vet, size_t n);
 
 		static int comparaLocalData(const Registro& r1, const Registro& r2) 
 		{
@@ -55,6 +58,25 @@ class Registro
 			if (r2.cases() < r1.cases())
 				return 1;
 			return 0;
+		};
+
+		static std::vector<Registro> nAleatorios(std::vector<Registro>& vet, size_t n)
+		{
+			size_t limit;
+			if(n <= vet.size())
+				limit = n;
+			else
+				limit = vet.size();
+
+			std::random_device rd; // obtain a random number from hardware
+			std::mt19937 gen(rd()); // seed the generator
+			std::uniform_int_distribution<> distr(0, limit); // define the range
+
+			std::vector<Registro> aleatorios;
+			for(size_t i = 0; i < n; ++i)
+				aleatorios.push_back(vet[distr(gen)]);
+
+			return aleatorios;
 		};
 };
 
