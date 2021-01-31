@@ -1,6 +1,6 @@
 CC=g++
 
-CC_FLAGS=-W -Wall -pedantic -std=c++11
+CC_FLAGS=-W -Wall -pedantic -std=c++17
 
 build: main
 
