@@ -13,7 +13,7 @@ Vista a importância da ordenação de dados para a organização de sistemas, e
 ## Instruções para compilação e execução
 ### Main
 ```
-make main
+make
 ./main brazil_covid19_cities.csv
 ```
 A main.cpp implementa o pré-processamento dos dados e realiza a ordenação de N registros aleatórios para cada algoritmo, escrevendo os resultados nos arquivos `saida.txt` e `saida.csv`.
