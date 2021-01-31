@@ -2,10 +2,11 @@
 #define SORT_ALGOS_HPP 1
 
 #include <vector>
+#include <functional>
 #include "Registro.hpp"
 
-using RegIterator = std::vector<Registro>::iterator; 
-using compRegFunc = int(*)(const Registro&, const Registro&);
+using RegIterator = std::vector<Registro>::iterator;
+using compRegFunc = std::function<int(const Registro&, const Registro&)>; 
 
 void timSort(RegIterator begin, RegIterator end, int &comparacoes, int &trocas, compRegFunc comp);
 

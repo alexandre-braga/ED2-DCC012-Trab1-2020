@@ -8,8 +8,7 @@ using namespace std;
 
 #define right(__i) ((__i) * 2 + 2)
 
-static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &trocas, 
-                    int(*comp)(const Registro&, const Registro&))
+static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &trocas, compRegFunc comp)
 {
     int l = left(i);
     int r = right(i);
@@ -41,16 +40,14 @@ static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &
     }
 }
 
-static void buildMaxHeap(vector<Registro>& vet, int &comparacoes, int &trocas, 
-                    int(*comp)(const Registro&, const Registro&))
+static void buildMaxHeap(vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp)
 {
     for (int i = vet.size()/2 - 1; i >= 0; i--) {
         maxHeap(vet, i, vet.size(), comparacoes, trocas, comp);
     }
 }
 
-void heapSort(vector<Registro>& vet, int &comparacoes, int &trocas, 
-                    int(*comp)(const Registro&, const Registro&))
+void heapSort(vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp)
 {
     buildMaxHeap(vet, comparacoes, trocas, comp);
     for (int i = vet.size() - 1; i >= 1; i--) {
