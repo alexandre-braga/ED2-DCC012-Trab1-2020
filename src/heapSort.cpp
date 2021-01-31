@@ -8,31 +8,19 @@ using namespace std;
 
 #define right(__i) ((__i) * 2 + 2)
 
-static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &trocas, 
-                    int(*comp)(const Registro&, const Registro&))
+static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &trocas, compRegFunc comp)
 {
     int l = left(i);
     int r = right(i);
     int m;
 
-    if (l < n) {
-        comparacoes++;
-        if(comp(vet[l], vet[i]) > 0) {
-            m = l;
-        }
-        else {
-            m = i;
-        }
-    } else {
+    if (l < n && ++comparacoes && comp(vet[l], vet[i]) > 0)
+        m = l;
+    else
         m = i;
-    }
 
-    if (r < n ) {
-        comparacoes++;
-        if(comp(vet[r], vet[m]) > 0) {
-            m = r;
-        }
-    }
+    if (r < n && ++comparacoes && comp(vet[r], vet[m]) > 0)
+        m = r;
 
     if (m != i) {
         std::swap(vet[i], vet[m]);
@@ -41,16 +29,14 @@ static void maxHeap(vector<Registro>& vet, int i, int n, int &comparacoes, int &
     }
 }
 
-static void buildMaxHeap(vector<Registro>& vet, int &comparacoes, int &trocas, 
-                    int(*comp)(const Registro&, const Registro&))
+static void buildMaxHeap(vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp)
 {
     for (int i = vet.size()/2 - 1; i >= 0; i--) {
         maxHeap(vet, i, vet.size(), comparacoes, trocas, comp);
     }
 }
 
-void heapSort(vector<Registro>& vet, int &comparacoes, int &trocas, 
-                    int(*comp)(const Registro&, const Registro&))
+void heapSort(vector<Registro>& vet, int &comparacoes, int &trocas, compRegFunc comp)
 {
     buildMaxHeap(vet, comparacoes, trocas, comp);
     for (int i = vet.size() - 1; i >= 1; i--) {

@@ -19,7 +19,7 @@ int indicePivo(std::vector<Registro>& vet) {
 /*
 // Algoritmo 1
 void quickSort(std::vector<Registro>& vet, int iVet, int fVet, 
-int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&))
+int &comparacoes, int &trocas, compRegFunc comp)
 {
     //particionamento do vetor
     if (iVet >= fVet) {
@@ -51,7 +51,7 @@ int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&))
 /*
 // Algoritmo 2
 int part(std::vector<Registro>& vet, int p, int q, 
-int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&)) {
+int &comparacoes, int &trocas, compRegFunc comp) {
     Registro pivo = vet[q];
     int i = p-1;
 
@@ -71,7 +71,7 @@ int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&)) {
 }
 
 void quickSort(std::vector<Registro>& vet, int p, int r, 
-int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&)) {
+int &comparacoes, int &trocas, compRegFunc comp) {
     if(p < r) {
         int q = part(vet, p, r, comparacoes, trocas, comp);
         quickSort(vet, p, q-1, comparacoes, trocas, comp);
@@ -82,29 +82,24 @@ int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&)) {
 
 // Algoritmo 3
 void quickSort(std::vector<Registro>& vet, int iVet, int fVet, 
-int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&)) {
+int &comparacoes, int &trocas, compRegFunc comp) {
     if (fVet - iVet < 0)
         return;
     //particionamento do vetor
-    int pivo = vet[((iVet + fVet)/2)].cases();
+    Registro& pivo = vet[((iVet + fVet)/2)];
     int i = iVet;
     int j = fVet;
     int k = iVet;
     while (i <= j) {
-        comparacoes++;
-        if (vet[i].cases() < pivo) {
-            comparacoes++;
+        if (++comparacoes && comp(vet[i], pivo) < 0) {
             std::swap(vet[i], vet[k]);
             trocas++;
             k++;
             i++;
-        } else if (vet[i].cases() > pivo) {
-            comparacoes++;
-            while (vet[j].cases() >= vet[i].cases()) {
-                comparacoes++;
+        } else if (++comparacoes && comp(vet[i], pivo) > 0) {
+            while (++comparacoes && comp(vet[j], vet[i]) >= 0) {
                 j--;
             }
-            comparacoes++;
             std::swap(vet[i], vet[j]);
             trocas++;
             j--;
@@ -112,7 +107,6 @@ int &comparacoes, int &trocas, int(*comp)(const Registro&, const Registro&)) {
             i++;
         }
     }
-    comparacoes++;
 
     //chamadas recursivas
     quickSort(vet, iVet, k - 1, comparacoes, trocas, comp);
