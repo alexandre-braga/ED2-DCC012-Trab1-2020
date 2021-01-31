@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <cstring>
+#include <vector>
+#include <random>
 
 const std::string& Registro::date() const
 {
