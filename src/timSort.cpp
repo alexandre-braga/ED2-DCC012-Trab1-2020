@@ -1,3 +1,4 @@
+  
 #include "../include/sortalgos.hpp"
 
 #include <algorithm>
@@ -5,8 +6,8 @@
 #include <stack>
 #include <chrono>
 
-#define MIN_RUN  32
-#define MAX_RUN  64
+#define MIN_RUN  64
+#define MAX_RUN  128
 
 using namespace std;
 
@@ -50,43 +51,21 @@ public:
 static int _comparacoes;
 static int _trocas;
 
-RegIterator findInsertionPos(RegIterator begin, RegIterator end, const Registro& val, compRegFunc comp)
-{
-	RegIterator it;
-	auto count = distance(end, begin);
-
-	while (count > 0) {
-		auto step = count / 2;
-		it = begin;
-		it += step;
-
-		if (comp(val, *it) < 0) {
-			count = step;
-		} else {
-			begin = ++it;
-			count -= step;
-		}
-	}
-	return begin;
-}
-
-void binInsertion(RegIterator begin, RegIterator end, Registro val, compRegFunc func)
-{
-	RegIterator insertionPos = findInsertionPos(begin, end, val, func);
-	RevRegIter rend(insertionPos);
-	RevRegIter rbegin(end);
-	RevRegIter it = rbegin;
-	RevRegIter next = it + 1;
-
-	while (next < rend) {
-		*it = *next;
-		it = next++;
-	}
-	*insertionPos = std::move(val);
+/*Insertion Sort: */
+static void insertionSort(RegIterator inicio, RegIterator fim, compRegFunc comp)    
+{ 
+    for (RegIterator i = inicio + 1; i < fim; i++) {
+        for (RegIterator j = i; j > inicio && comp(*j, *(j-1)) < 0; j--) {
+            _comparacoes++;
+            std::swap(*j, *(j-1));
+            _trocas++;
+        }
+        _comparacoes++;
+    }
 } 
 
 /*Calcula tamanho das Runs: */
-static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior, compRegFunc comp)
+static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior)
 {
     RegIterator fimrun = inicio;
     RegIterator a = inicio;
@@ -95,44 +74,26 @@ static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior,
     if (totalDeElementos < MIN_RUN) {
         return limiteSuperior;
     }
-
-    if (++_comparacoes && comp(*(a + 1), *a) >= 0) {
-
-        while (++_comparacoes && comp(*(a + 1), *a) >= 0) {
+    _comparacoes++;
+    if ((a + 1)->cases() >= a->cases()) {
+        while ((a + 1)->cases() >= a->cases()) {
+            _comparacoes++;
             a++;
+            /*se o tamanho atual n é maior q o max da run 64*/
             if (a - inicio >= MAX_RUN || a >= limiteSuperior) {
                 return fimrun;
             }
             fimrun++;
         }
-
-        while (a < limiteSuperior && (a - inicio) < MIN_RUN) {
-            a++;
-            fimrun++;
-            if (++_comparacoes && comp(*(a + 1), *a) < 0) {
-                binInsertion(inicio, (a + 1), std::move(*(a + 1)), comp);
-            }
-        }
-
+        _comparacoes++;
     } else {
-
-        while (++_comparacoes && comp(*(a + 1), *a) <= 0) {
+        _comparacoes++;
+        while ((a + 1)->cases() <= a->cases()) {
+            _comparacoes++;
             a++;
             if (a - inicio >= MAX_RUN || a >= limiteSuperior) {
                 return fimrun;
             }
-            fimrun++;
-        }
-
-        while (a < limiteSuperior && (a - inicio) < MIN_RUN) {
-            auto reverseComp = [comp](const Registro& r1, const Registro& r2)-> int {
-                return -comp(r1, r2);
-            };
-
-            if (++_comparacoes && comp(*(a + 1), *a) < 0) {
-                binInsertion(inicio, (a + 1), std::move(*(a + 1)), reverseComp);
-            }
-            a++;
             fimrun++;
         }
         reverse(a, fimrun + 1);
@@ -166,18 +127,16 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
 	std::vector<Registro> tempArea;
     if (rightRun->size() < leftRun->size()) {
         for (auto& reg : *rightRun) {
-            tempArea.push_back(std::move(reg));
+            tempArea.push_back(reg);
         }
         // Caso o Run da direita seja menor, a comparação é feita marcando o endereço base do Run da esquerda e do Run temporário na última posição válida e ambos os vetores são percorridos da direita para a esquerda, sempre buscando o maior elemento em vez do menor.
 
         auto writeIt = resultado.rbegin();
         auto tempIt = tempArea.rbegin();
-        auto rightIt = rightRun->rbegin();
+        auto leftIt = leftRun->rbegin();
 
-        while (tempIt != tempArea.rend() && rightIt != rightRun->rend()) {
-            *writeIt++ = std::move(
-                (comp(*tempIt, *rightIt) > 0) ? *tempIt++ : *rightIt++
-            );
+        while (tempIt != tempArea.rend() && leftIt != leftRun->rend()) {
+            *writeIt++ = (comp(*tempIt, *leftIt) > 0) ? *tempIt++ : *leftIt++;
         }
 
         while (tempIt != tempArea.rend()) {
@@ -185,34 +144,31 @@ static Chunk merge(Chunk& run1, Chunk& run2 ,compRegFunc comp)
             ++_trocas;
             *writeIt++ = *tempIt++;
         }
-        while (rightIt != rightRun->rend()) {
+        while (leftIt != leftRun->rend()) {
             ++_comparacoes;
             ++_trocas;
-            *writeIt++ = *rightIt++;
+            *writeIt++ = *leftIt++;
         }
     } else {
         for (auto& reg : *leftRun) {
             tempArea.push_back(std::move(reg));
         }
-
         auto writeIt = resultado.begin();
         auto tempIt = tempArea.begin();
-        auto leftIt = leftRun->begin();
+        auto rightIt = rightRun->begin();
 
-        while (tempIt != tempArea.end() && leftIt != leftRun->end()) {
+        while (tempIt != tempArea.end() && rightIt != rightRun->end()) {
             ++_comparacoes;
             ++_trocas;
-            *writeIt++ = std::move(
-                (comp(*tempIt, *leftIt) < 0) ? *tempIt++ : *leftIt++
-            );
+            *writeIt++ = (comp(*tempIt, *rightIt) < 0) ? *tempIt++ : *rightIt++;
         }
         while (tempIt != tempArea.end()) {
             ++_trocas;
             *writeIt++ = *tempIt++;
         }
-        while (leftIt != leftRun->end()) {
+        while (rightIt != rightRun->end()) {
             ++_trocas;
-            *writeIt++ = *leftIt++;
+            *writeIt++ = *rightIt++;
         }
     }
 	return resultado;
@@ -276,7 +232,8 @@ void timSort(RegIterator begin, RegIterator end, int &comparacoes, int &trocas, 
     _comparacoes = _trocas = 0;
 
     for (RegIterator lo = begin, ho ; lo < end; lo = ho) { 
-        ho = calculaFimRun(lo, end, comp);
+        ho = calculaFimRun(lo, end);
+        insertionSort(lo, ho, comp); 
         pilhaDeRuns.push({lo,ho});
         ajustaSegmentoDeRunsDinamicamente(pilhaDeRuns, comp);
         mergeFinal(pilhaDeRuns, comp);
