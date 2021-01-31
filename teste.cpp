@@ -21,19 +21,19 @@
 
 void exibirRegistros(std::vector<Registro>& vet, size_t n)
 {
-    std::cout << std::setw(16) << std::left << "Data";
-    std::cout << std::setw(16) << std::left << "Estado";
-    std::cout << std::setw(16) << std::left << "Nome";
-    std::cout << std::setw(16) << std::left << "Codigo";
+    std::cout << std::setw(14) << std::left << "Data";
+    std::cout << std::setw(12) << std::left << "Estado";
+    std::cout << std::setw(30) << std::left << "Nome";
+    std::cout << std::setw(14) << std::left << "Codigo";
     std::cout << std::setw(16) << std::left << "Casos diarios";
     std::cout << std::setw(16) << std::left << "Mortes diarias";
     std::cout << std::endl;
     for(size_t i = 0; i < n && i < vet.size(); ++i) {
         Registro& r = vet[i];
-        std::cout << std::setw(16) << std::left << r.date();
-        std::cout << std::setw(16) << std::left << r.state();
-        std::cout << std::setw(16) << std::left << r.city();
-        std::cout << std::setw(16) << std::left << r.code();
+        std::cout << std::setw(14) << std::left << r.date();
+        std::cout << std::setw(12) << std::left << r.state();
+        std::cout << std::setw(30) << std::left << r.city();
+        std::cout << std::setw(14) << std::left << r.code();
         std::cout << std::setw(16) << std::left << r.cases();
         std::cout << std::setw(16) << std::left << r.deaths();
         std::cout << std::endl;
