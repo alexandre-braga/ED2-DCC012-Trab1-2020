@@ -6,8 +6,8 @@
 #include <stack>
 #include <chrono>
 
-#define MIN_RUN  64
-#define MAX_RUN  128
+#define MIN_RUN  128
+#define MAX_RUN  256
 
 using namespace std;
 
