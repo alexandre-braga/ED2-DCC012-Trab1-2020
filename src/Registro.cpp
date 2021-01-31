@@ -6,6 +6,13 @@
 #include <random>
 #include <algorithm>
 
+
+int Registro::comparaCasos(const Registro& r1, const Registro& r2) 
+{
+			return r1.cases() - r2.cases();
+}
+
+
 std::vector<Registro> Registro::nAleatorios(std::vector<Registro>& vet, size_t n)
 {
 	size_t limit;

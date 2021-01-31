@@ -86,18 +86,18 @@ void quickSort(std::vector<Registro>& vet, int iVet, int fVet, int &comparacoes,
     if (fVet - iVet < 0)
         return;
     //particionamento do vetor
-    Registro& pivo = vet[((iVet + fVet)/2)];
+    int pivo = vet[((iVet + fVet)/2)].cases();
     int i = iVet;
     int j = fVet;
     int k = iVet;
     while (i <= j) {
-        if (++comparacoes && comp(vet[i], pivo) < 0) {
+        if (++comparacoes && (vet[i].cases() < pivo)) {
             std::swap(vet[i], vet[k]);
             trocas++;
             k++;
             i++;
-        } else if (++comparacoes && comp(vet[i], pivo) > 0) {
-            while (++comparacoes && comp(vet[j], vet[i]) >= 0) {
+        } else if (++comparacoes && (vet[i].cases() > pivo)) {
+            while (++comparacoes && (vet[j].cases() >= vet[i].cases())) {
                 j--;
             }
             std::swap(vet[i], vet[j]);
