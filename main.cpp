@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 				// Preencher com outros algoritmos
 				vet = vetControle;
 				begin = std::chrono::steady_clock::now();
-				timSort(vet.begin(), vet.end(), matrizComp[HEAPSORT][i][j], matrizTrocas[HEAPSORT][i][j], Registro::comparaCasos);
+				timSort(vet.begin(), vet.end(), matrizComp[TIMSORT][i][j], matrizTrocas[TIMSORT][i][j], Registro::comparaCasos);
 				end = std::chrono::steady_clock::now();
 				matrizTempos[TIMSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 				
