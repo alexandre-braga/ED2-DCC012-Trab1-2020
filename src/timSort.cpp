@@ -107,6 +107,8 @@ static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior,
         }
 
         while (a < limiteSuperior && (a - inicio) < MIN_RUN) {
+            a++;
+            fimrun++;
             if (++_comparacoes && comp(*(a + 1), *a) < 0) {
                 binInsertion(inicio, (a + 1), std::move(*(a + 1)), comp);
             }
@@ -130,6 +132,8 @@ static RegIterator calculaFimRun(RegIterator inicio, RegIterator limiteSuperior,
             if (++_comparacoes && comp(*(a + 1), *a) < 0) {
                 binInsertion(inicio, (a + 1), std::move(*(a + 1)), reverseComp);
             }
+            a++;
+            fimrun++;
         }
         reverse(a, fimrun + 1);
     }
