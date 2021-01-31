@@ -60,24 +60,7 @@ class Registro
 			return 0;
 		};
 
-		static std::vector<Registro> nAleatorios(std::vector<Registro>& vet, size_t n)
-		{
-			size_t limit;
-			if(n <= vet.size())
-				limit = n;
-			else
-				limit = vet.size();
-
-			std::random_device rd; // obtain a random number from hardware
-			std::mt19937 gen(rd()); // seed the generator
-			std::uniform_int_distribution<> distr(0, limit); // define the range
-
-			std::vector<Registro> aleatorios;
-			for(size_t i = 0; i < n; ++i)
-				aleatorios.push_back(vet[distr(gen)]);
-
-			return aleatorios;
-		};
+		static std::vector<Registro> nAleatorios(std::vector<Registro>& vet, size_t n);
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Registro& r)

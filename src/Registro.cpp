@@ -4,6 +4,28 @@
 #include <cstring>
 #include <vector>
 #include <random>
+#include <algorithm>
+
+std::vector<Registro> Registro::nAleatorios(std::vector<Registro>& vet, size_t n)
+{
+	size_t limit;
+	if(n <= vet.size())
+		limit = n;
+	else
+		limit = vet.size();
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 gen(rd()); // seed the generator
+	std::uniform_int_distribution<> distr(0, limit); // define the range
+
+	std::vector<Registro> aleatorios;
+	std::sample(vet.begin(), vet.end(), std::back_inserter(aleatorios), n,  std::mt19937{std::random_device{}()});
+	return aleatorios;
+	/*
+	for(size_t i = 0; i < n; ++i)
+		aleatorios.push_back(vet[distr(gen)]);
+	return aleatorios;
+	*/
+}
 
 const std::string& Registro::date() const
 {

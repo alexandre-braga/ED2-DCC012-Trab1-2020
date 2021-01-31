@@ -127,6 +127,7 @@ int main(int argc, char *argv[])
 		for(size_t i = 0; i < N; ++i) {
 			for(size_t j = 0; j < M; ++j) {
 				// Obter N elementos aleatorios -> Registro::nAleatorios(vetRegistros, N=10k..50k..100k..etc..);
+				if (i >= 1) break;
 				std::vector<Registro> vetControle = Registro::nAleatorios(vetRegistros, arr[i]);
 				
 				// Criar copia a ser ordenada
@@ -136,6 +137,16 @@ int main(int argc, char *argv[])
 				end = std::chrono::steady_clock::now();
 				matrizTempos[HEAPSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 				
+				
+				
+				//cria arquivo com heap ordenados TIRAR DEPOIS HEIN
+				std::ofstream teste1;
+				teste1.open("apos_heap.txt");
+				for (int k = 0; k < arr[i]; k++) {
+					teste1 << vet[k].date() << " " << vet[k].code() << " " << vet[k].cases() << '\n';
+				}
+				teste1.close();
+
 				// Recuperar ordem inicial dos elementos
 				vet = vetControle;
 				begin = std::chrono::steady_clock::now();
@@ -143,6 +154,15 @@ int main(int argc, char *argv[])
 				end = std::chrono::steady_clock::now();
 				matrizTempos[QUICKSORT][i][j] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 				
+				
+				
+				//quicksort ordenado TIRAR DEPOIS HEIN 
+				std::ofstream teste2;
+				teste2.open("apos_quick.txt");
+				for (int k = 0; k < arr[i]; k++) {
+					teste2 << vet[k].date() << " " << vet[k].code() << " " << vet[k].cases() << '\n';
+				}
+				teste2.close();
 				/*
 				// Preencher com outros algoritmos
 				vet = vetControle;
