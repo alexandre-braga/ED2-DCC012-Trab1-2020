@@ -9,9 +9,23 @@
 
 int Registro::comparaCasos(const Registro& r1, const Registro& r2) 
 {
-			return r1.cases() - r2.cases();
+	return r1.cases() - r2.cases();
 }
 
+int Registro::comparaLocalData(const Registro& r1, const Registro& r2) 
+{
+    if (r1.state() < r2.state())
+        return -1;
+    if (r2.state() < r1.state())
+        return 1;
+    if (r1.city() < r2.city())
+        return -1;
+    if (r2.city() < r1.city())
+        return 1;
+    if (r1.date() < r2.date())
+        return -1;
+    return 1;
+}
 
 std::vector<Registro> Registro::nAleatorios(std::vector<Registro>& vet, size_t n)
 {
@@ -91,14 +105,14 @@ int Registro::setCode(const std::string& code)
 	return 0;
 }
 
-int Registro::setCases(unsigned int cases)
+int Registro::setCases(int cases)
 {
 	// validate cases
 	this->_cases = cases;
 	return 0;
 }
 
-int Registro::setDeaths(unsigned int deaths)
+int Registro::setDeaths(int deaths)
 {
 	// validate deaths
 	this->_deaths = deaths;

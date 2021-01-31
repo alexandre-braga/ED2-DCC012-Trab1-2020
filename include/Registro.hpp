@@ -29,28 +29,13 @@ class Registro
   		int setState(const std::string& state);
   		int setCity(const std::string& city);
   		int setCode(const std::string& code);
-  		int setCases(unsigned int cases);
-  		int setDeaths(unsigned int deaths);
+  		int setCases(int cases);
+  		int setDeaths(int deaths);
 	
   		std::ostream& print(std::ostream& os) const;
   		std::istream& read(std::istream& is);
-		//static std::vector<Registro> nAleatorios(std::vector<Registro>& vet, size_t n);
 
-		static int comparaLocalData(const Registro& r1, const Registro& r2) 
-		{
-			if (r1.state() < r2.state())
-				return -1;
-			if (r2.state() < r1.state())
-				return 1;
-			if (r1.city() < r2.city())
-				return -1;
-			if (r2.city() < r1.city())
-				return 1;
-			if (r1.date() < r2.date())
-				return -1;
-			return 1;
-		};
-
+		static int comparaLocalData(const Registro& r1, const Registro& r2);
 		static int comparaCasos(const Registro& r1, const Registro& r2);
 
 		static std::vector<Registro> nAleatorios(std::vector<Registro>& vet, size_t n);
