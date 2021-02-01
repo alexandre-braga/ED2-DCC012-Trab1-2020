@@ -15,7 +15,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('../saida.csv')
+df = pd.read_csv('saida.csv')
 print(df.head())
 
 melt = pd.melt(df, id_vars=['N','algoritmo'], value_vars=['comparacoes','trocas','tempo_µs'])
